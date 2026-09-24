@@ -1,0 +1,12 @@
+Godot Engine v4.7.1.stable.official.a13da4feb - https://godotengine.org
+
+--- delaunay_3d ---
+OK: 55 unique edges over 16 points
+--- pathfinder_3d ---
+OK: path len=9 stair jumps=1
+--- dungeon.generate ---
+dungeon: 18 rooms, 21 edges selected, 21 paths carved, 0 failed, 56 stair cells
+counts: rooms=155 halls=82 doors=39 border=300 stairs=56
+OK: multi-floor dungeon generated with stairs
+SELFTEST: ALL PASSED
+ERROR: 25 RID allocations of type 'P10JoltBody3D' were leaked at exit.

@@ -1,7 +1,7 @@
 # 3D Dungeon + Stairs — Analysis & Plan
 
-> **STATUS: ANALYSIS ONLY — NO SCRIPTING YET.**
-> Open questions must be answered before any code is written (see bottom).
+> **STATUS: IMPLEMENTED — awaiting scene edits + in-editor test.**
+> All generation code written in GDScript; self-test passed (see §7).
 > Last updated: 2026-09-25
 
 ---
@@ -16,8 +16,9 @@
 | Key ref files | `Assets/Scripts3D/Delaunay3D.cs`, `DungeonPathfinder3D.cs`, `Generator3D.cs`, `Grid3D.cs` |
 | Delaunay3D origin (MIT) | https://github.com/Bl4ckb0ne/delaunay-triangulation |
 
-Language note: project runs **Godot 4.8 dev6 mono** → `.cs` scripts are allowed. The two hard pieces
-(`Delaunay3D`, `DungeonPathfinder3D`) are near-verbatim C#-to-C# ports if we choose C#.
+Language note: project runs **Godot 4.8 dev6 mono**, but decision is **all GDScript** (no `.csproj`
+exists; C# would need an assembly build we cannot test headless + GDScript↔C# interop risk).
+Only available test binaries are Godot 4.7/4.7.1 (see §7).
 
 ---
 
@@ -154,7 +155,7 @@ stair block = 2×2: (P+h, y), (P+2h, y), (P+h, y+1), (P+2h, y+1)
 
 ---
 
-## 5. Proposed implementation (NOT STARTED)
+## 5. Implementation (DONE — see §7 for file list)
 
 ### Option A — C# ports (recommended if user agrees)
 | New file | Port of | Notes |
@@ -174,28 +175,53 @@ Same pieces, hand-ported; slower to write, no Unity→Godot API friction.
 - `dungeon_cell.gd`: `queue_free()` → `free()` (persistence fix) — *if staying with editor bake*
 - Scene edits (user): set `floor_count`, add stair handling to DunMesh exports, regenerate
 
-### Decision needed: generation timing
-- **Editor bake** (current `@tool` + Start toggle): scene grows huge, persistence bug bites,
-  every param change = re-save.
-- **Runtime `_ready()`** (recommended earlier): GridMap = source of truth, scene file stays small,
-  fixes persistence bug by design; editor shows GridMap debug tiles only (or a "preview" bake).
+### Generation timing — DECIDED: editor bake (`@tool`) kept
+- Stays on the current `@tool` + Start-toggle workflow (matches "user does all scene edits").
+- Persistence bug fixed instead: `dungeon_cell.gd` now uses **`free()`** (reference-tutorial behavior).
 
 ---
 
-## 6. Open questions — ANSWER BEFORE SCRIPTING
+## 6. Open questions — ANSWERS (all resolved)
 
-1. **Language**: C# ports (A) or GDScript (B)? *(mono is available; A is near-verbatim)*
-2. **Generation timing**: editor-bake `@tool` (fix persistence) or runtime `_ready()` (recommended)?
-3. **Rooms**: single-floor rooms only, or allow tall rooms spanning floors (vazgriz `size.y > 1`)?
-4. **Room traversal**: keep rooms solid (current) or vazgriz-style allow pathing through rooms at +5 cost (changes endpoints to room centers)?
-5. **`floor_count` default**: 1 (= today's behavior), or 3?
-6. **Failed edges**: silently skip (vazgriz) + optional debug print?
-7. **Stair mesh strategy**: ONE stair instance per 2×2 block (recommended — mesh is a full flight) with GridMap item 4 on all 4 cells — OK?
-8. **Debt first?**: fix `queue_free` persistence + stale DunMesh instances + wire `hide_grid_map_after_build` before/with this work?
-9. **Top/bottom**: ceiling slab above top floor? border walls on every floor y?
+1. **Language**: GDScript (B) — no `.csproj`, headless C# build untestable here. ✔
+2. **Generation timing**: editor bake `@tool`, persistence fixed via `free()` (see §5). ✔
+3. **Rooms**: single-floor rooms only (y = random in `0..floor_count-1`, height 1). ✔
+4. **Room traversal**: rooms stay **solid** (no +5 pathing). Endpoints = closest perimeter tile. ✔
+5. **`floor_count` default**: **3** (exported, editable in inspector). ✔
+6. **Failed edges**: silently skipped, one summary print of carved/failed counts. ✔
+7. **Stair mesh**: ONE instance per 2×2 block, item 4 on all 4 cells. ✔
+8. **Debt**: fixed alongside — `free()`, `hide_grid_map_after_build` + `remove_cell_collision`
+   now wired; componentwise `cell_size` (multi-floor Y). *Stale 256-spacing DunMesh instances in
+   the scene still need a regen (next Start bake replaces them anyway).* ✔
+9. **Top/bottom**: border walls on every floor; no extra ceiling slab above top floor (cell art
+   ceiling already closes each level). ✔
 
 ---
 
 ## 7. Log / decisions
 
-- *(none yet — awaiting answers to §6)*
+### 2026-09-25 — implementation complete (code), self-test passed
+
+| File | Action |
+|---|---|
+| `dungeon-generation/delaunay_3d.gd` | **NEW** `DunDelaunay3D` — Bowyer-Watson tetrahedralization, circumspheres, degenerate-tet guard, canonical `Vector2i(min,max)` edge list |
+| `dungeon-generation/dungeon_pathfinder_3d.gd` | **NEW** `DunPathfinder3D` — 4 flat + 8 stair neighbors, per-node `PreviousSet`, rooms/borders solid, None +1 / stair 100+heur, 4-cell stair safety, empty array = failed edge |
+| `dungeon-generation/dungeon.gd` | **REWRITTEN** — `floor_count` export (def 3), per-floor border, 3D `make_room` (random y), 3D delaunay w/ coplanar 2D fallback, 3D Prim + `survival_chance`, `_pathfind_hallways` (door temp-set, carve None→1, vertical step → 4× item 4, summary print) |
+| `dungeon-generation/dungeon_mesh.gd` | **EDITED** — item 4 handled (type normalized 1 in handle matrix), stair shaft openings (remove ceiling/floor), `_maybe_place_stair` (c1 detection, midpoint × cell_size, yaw table, `STAIR_ASCENDS_ALONG_POSITIVE_X` const), `dungeon_stair_scene` export, `hide_grid_map_after_build` + `remove_cell_collision` wired, componentwise `Vector3(cell) * grid_map.cell_size` |
+| `dungeon-generation/dungeon_cell.gd` | **EDITED** — `queue_free()` → `free()` (persistence fix), added `remove_ceiling()` / `remove_floor()` |
+| `dungeon_selftest.gd` | **NEW (temporary)** — headless regression test, all passed |
+
+**Verification** (Godot 4.7.1 headless, `--script dungeon_selftest.gd`, exit 0):
+- delaunay: 55 unique edges / 16 random points, no dupes/self-loops, range-safe
+- pathfinder: path across 2 floors with 1 stair jump, correct (3h + 1y) step shape
+- generate: 18 rooms on ≥2 floors, 21/21 edges carved (0 failed), 56 stair cells (= 14 × 2×2),
+  39 doors, items only in {-1,0,1,2,3,4}
+- fixed en route: `Vector3.max_axis()` doesn't exist → `maxf()` chain; `var d := load(...)` type
+  inference error → untyped `=`
+
+**Known caveats**
+- Stair scene assumed to ascend along world **+X**; if placed stairs run downhill, set
+  `STAIR_ASCENDS_ALONG_POSITIVE_X = false` in `dungeon_mesh.gd` (top of file).
+- Godot 4.8 editor not runnable here → final validation is the user's in-editor bake.
+- Command-line note: Godot GUI binaries need `Start-Process -Wait` (or output redirection) from
+  pwsh; plain `&` doesn't wait/capture.

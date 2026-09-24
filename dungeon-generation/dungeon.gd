@@ -7,6 +7,9 @@ extends Node3D
 @export var border_size: int = 20:
 	set = set_border_size
 
+@export var floor_count: int = 3:
+	set = set_floor_count
+
 @export var min_room_size: int = 2
 @export var max_room_size: int = 4
 @export var room_number: int = 4
@@ -35,6 +38,12 @@ func set_border_size(value: int) -> void:
 		visualize_border()
 
 
+func set_floor_count(value: int) -> void:
+	floor_count = maxi(value, 1)
+	if Engine.is_editor_hint() and grid_map:
+		visualize_border()
+
+
 func set_seed(value: String) -> void:
 	custom_seed = value
 	seed(value.hash())
@@ -42,11 +51,12 @@ func set_seed(value: String) -> void:
 
 func visualize_border() -> void:
 	grid_map.clear()
-	for i in range(-1, border_size + 1):
-		grid_map.set_cell_item(Vector3i(i, 0, -1), 3)
-		grid_map.set_cell_item(Vector3i(i, 0, border_size), 3)
-		grid_map.set_cell_item(Vector3i(-1, 0, i), 3)
-		grid_map.set_cell_item(Vector3i(border_size, 0, i), 3)
+	for y in floor_count:
+		for i in range(-1, border_size + 1):
+			grid_map.set_cell_item(Vector3i(i, y, -1), 3)
+			grid_map.set_cell_item(Vector3i(i, y, border_size), 3)
+			grid_map.set_cell_item(Vector3i(-1, y, i), 3)
+			grid_map.set_cell_item(Vector3i(border_size, y, i), 3)
 
 
 func generate() -> void:
@@ -60,63 +70,17 @@ func generate() -> void:
 	for i in room_number:
 		make_room(room_recursion)
 
-	print(room_positions)
+	if room_positions.size() < 2:
+		print("dungeon: not enough rooms")
+		return
 
-	var room_positions_v2 := PackedVector2Array()
-	for pos in room_positions:
-		room_positions_v2.append(Vector2(pos.x, pos.z))
+	var edges := _compute_room_edges()
+	if edges.is_empty():
+		print("dungeon: no room edges")
+		return
 
-	var delaunay_graph := AStar2D.new()
-	var mst_graph := AStar2D.new()
-
-	for rp in room_positions_v2:
-		delaunay_graph.add_point(delaunay_graph.get_available_point_id(), rp)
-		mst_graph.add_point(mst_graph.get_available_point_id(), rp)
-
-	var delaunay := Array(Geometry2D.triangulate_delaunay(room_positions_v2))
-	for i in delaunay.size() / 3:
-		delaunay_graph.connect_points(delaunay[i * 3], delaunay[i * 3 + 1])
-		delaunay_graph.connect_points(delaunay[i * 3 + 1], delaunay[i * 3 + 2])
-		delaunay_graph.connect_points(delaunay[i * 3 + 2], delaunay[i * 3])
-
-	var visited_points := PackedInt32Array()
-	visited_points.append(randi() % room_positions_v2.size())
-
-	while visited_points.size() < mst_graph.get_point_count():
-		var possible_connections: Array[PackedInt32Array] = []
-
-		for visited_point in visited_points:
-			for connection in delaunay_graph.get_point_connections(visited_point):
-				if not visited_points.has(connection):
-					var conn := PackedInt32Array([visited_point, connection])
-					possible_connections.append(conn)
-
-		var connection := possible_connections[randi() % possible_connections.size()]
-
-		for pc in possible_connections:
-			var pc_dist := delaunay_graph.get_point_position(pc[0]).distance_squared_to(
-				delaunay_graph.get_point_position(pc[1])
-			)
-			var cur_dist := delaunay_graph.get_point_position(connection[0]).distance_squared_to(
-				delaunay_graph.get_point_position(connection[1])
-			)
-			if cur_dist > pc_dist:
-				connection = pc
-
-		visited_points.append(connection[1])
-		mst_graph.connect_points(connection[0], connection[1])
-		delaunay_graph.disconnect_points(connection[0], connection[1])
-
-	var hallway_graph: AStar2D = mst_graph
-
-	for point in delaunay_graph.get_point_ids():
-		for connection in delaunay_graph.get_point_connections(point):
-			if connection > point:
-				var kill := randf()
-				if survival_chance > kill:
-					hallway_graph.connect_points(point, connection)
-
-	draw_hallways(hallway_graph)
+	var selected := _select_hallway_edges(edges)
+	_pathfind_hallways(selected)
 
 
 func make_room(recursion: int) -> void:
@@ -128,6 +92,7 @@ func make_room(recursion: int) -> void:
 
 	var start_pos := Vector3i()
 	start_pos.x = randi() % (border_size - width + 1)
+	start_pos.y = randi() % floor_count
 	start_pos.z = randi() % (border_size - height + 1)
 
 	for row in range(-room_margin, height + room_margin):
@@ -148,54 +113,178 @@ func make_room(recursion: int) -> void:
 
 	var avg_x: float = start_pos.x + width / 2.0
 	var avg_z: float = start_pos.z + height / 2.0
-	room_positions.append(Vector3(avg_x, 0, avg_z))
+	room_positions.append(Vector3(avg_x, start_pos.y, avg_z))
 
 
-func draw_hallways(graph: AStar2D) -> void:
-	var hallways: Array[PackedVector3Array] = []
+# Builds the potential-hallway edge list from room centers.
+# 3D tetrahedralization when rooms sit on different floors,
+# 2D delaunay fallback when everything is on one floor (coplanar).
+func _compute_room_edges() -> Array[Vector2i]:
+	var unique := {}
+	var empty: Array[Vector2i] = []
+	var n := room_positions.size()
+	if n < 2:
+		return empty
+	if n == 2:
+		unique[Vector2i(0, 1)] = true
 
-	for point in graph.get_point_ids():
-		for connection in graph.get_point_connections(point):
-			if connection > point:
-				var room_from: PackedVector3Array = room_tiles[point]
-				var room_to: PackedVector3Array = room_tiles[connection]
+	var coplanar := true
+	var y0 := room_positions[0].y
+	for p in room_positions:
+		if not is_equal_approx(p.y, y0):
+			coplanar = false
+			break
 
-				var tile_from: Vector3 = room_from[0]
-				var tile_to: Vector3 = room_to[0]
+	if n >= 4 and not coplanar:
+		for e in DunDelaunay3D.triangulate(room_positions):
+			unique[e] = true
+	else:
+		var pts := PackedVector2Array()
+		for p in room_positions:
+			pts.append(Vector2(p.x, p.z))
+		var tri := Geometry2D.triangulate_delaunay(pts)
+		for i in tri.size() / 3:
+			_add_edge(unique, tri[i * 3], tri[i * 3 + 1])
+			_add_edge(unique, tri[i * 3 + 1], tri[i * 3 + 2])
+			_add_edge(unique, tri[i * 3 + 2], tri[i * 3])
 
-				for tile in room_from:
-					if tile.distance_to(room_positions[connection]) < tile_from.distance_to(
-						room_positions[connection]
-					):
-						tile_from = tile
+	var out: Array[Vector2i] = []
+	for key in unique:
+		out.append(key as Vector2i)
+	return out
 
-				for tile in room_to:
-					if tile.distance_to(room_positions[point]) < tile_to.distance_to(
-						room_positions[point]
-					):
-						tile_to = tile
 
-				var temp_hallway := PackedVector3Array([tile_from, tile_to])
-				hallways.append(temp_hallway)
+func _add_edge(edges: Dictionary, a: int, b: int) -> void:
+	edges[Vector2i(mini(a, b), maxi(a, b))] = true
 
-				grid_map.set_cell_item(Vector3i(tile_from), 2)
-				grid_map.set_cell_item(Vector3i(tile_to), 2)
 
-	var a_star := AStarGrid2D.new()
-	a_star.size = Vector2i.ONE * border_size
-	a_star.update()
-	a_star.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
-	a_star.default_estimate_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
+# Prim's MST over 3D edges, then re-add leftover triangulation edges
+# with probability survival_chance (adds loops to the dungeon).
+func _select_hallway_edges(all_edges: Array[Vector2i]) -> Array[Vector2i]:
+	var n := room_positions.size()
+	var visited := {0: true}
+	var mst: Array[Vector2i] = []
 
-	for tile in grid_map.get_used_cells_by_item(0):
-		a_star.set_point_solid(Vector2i(tile.x, tile.z))
+	while visited.size() < n:
+		var best := Vector2i(-1, -1)
+		var best_d := INF
+		for e in all_edges:
+			var a_in: bool = visited.has(e.x)
+			var b_in: bool = visited.has(e.y)
+			if a_in == b_in:
+				continue
+			var d: float = room_positions[e.x].distance_squared_to(room_positions[e.y])
+			if d < best_d:
+				best_d = d
+				best = e
+		if best.x < 0:
+			break  # disconnected (should not happen)
+		mst.append(best)
+		if visited.has(best.x):
+			visited[best.y] = true
+		else:
+			visited[best.x] = true
 
-	for hallway in hallways:
-		var pos_from := Vector2i(hallway[0].x, hallway[0].z)
-		var pos_to := Vector2i(hallway[1].x, hallway[1].z)
-		var path := a_star.get_id_path(pos_from, pos_to)
+	var selected := mst.duplicate()
+	var mst_keys := {}
+	for e in mst:
+		mst_keys[e] = true
+	for e in all_edges:
+		if mst_keys.has(e):
+			continue
+		if randf() < survival_chance:
+			selected.append(e)
+	return selected
 
-		for t in path:
-			var position := Vector3i(t.x, 0, t.y)
-			if grid_map.get_cell_item(position) == -1:
-				grid_map.set_cell_item(position, 1)
+
+# Runs the stair-aware 3D pathfinder for every selected edge and commits
+# doors, hallways and stair cells to the GridMap. Edges that fail to
+# pathfind are skipped (same as the reference algorithm).
+func _pathfind_hallways(selected: Array[Vector2i]) -> void:
+	var pf := DunPathfinder3D.new(Vector3i(border_size, floor_count, border_size))
+	for c in grid_map.get_used_cells():
+		pf.set_cell(c, grid_map.get_cell_item(c))
+
+	var carved := 0
+	var failed := 0
+	var stair_cells := 0
+
+	for e in selected:
+		var room_from: PackedVector3Array = room_tiles[e.x]
+		var room_to: PackedVector3Array = room_tiles[e.y]
+		var tile_from := _perimeter_tile(room_from, room_positions[e.y])
+		var tile_to := _perimeter_tile(room_to, room_positions[e.x])
+		var from := Vector3i(tile_from)
+		var to := Vector3i(tile_to)
+		if from == to:
+			failed += 1
+			continue
+
+		# temporarily mark endpoints as doors so they are traversable
+		var prev_from := pf.get_cell(from)
+		var prev_to := pf.get_cell(to)
+		pf.set_cell(from, 2)
+		pf.set_cell(to, 2)
+
+		var path := pf.find_path(from, to)
+		if path.is_empty():
+			pf.set_cell(from, prev_from)
+			pf.set_cell(to, prev_to)
+			failed += 1
+			continue
+
+		grid_map.set_cell_item(from, 2)
+		grid_map.set_cell_item(to, 2)
+
+		for i in path.size():
+			var p: Vector3i = path[i]
+			if pf.get_cell(p) == -1:
+				pf.set_cell(p, 1)
+				grid_map.set_cell_item(p, 1)
+
+			if i > 0:
+				var prev: Vector3i = path[i - 1]
+				var d := p - prev
+				if d.y != 0:
+					var h := Vector3i(signi(d.x), 0, signi(d.z))
+					var v := Vector3i(0, d.y, 0)
+					for cp: Vector3i in [prev + h, prev + h * 2, prev + v + h, prev + v + h * 2]:
+						pf.set_cell(cp, 4)
+						grid_map.set_cell_item(cp, 4)
+						stair_cells += 1
+
+		carved += 1
+
+	print(
+		"dungeon: %d rooms, %d edges selected, %d paths carved, %d failed, %d stair cells"
+		% [room_positions.size(), selected.size(), carved, failed, stair_cells]
+	)
+
+
+# Closest room-border tile to the target point (room centers are used as
+# targets; interior tiles are skipped so paths always leave through a wall).
+func _perimeter_tile(room: PackedVector3Array, target: Vector3) -> Vector3:
+	var best := Vector3.ZERO
+	var best_d := INF
+	var best_any := Vector3.ZERO
+	var best_any_d := INF
+
+	for tile in room:
+		var d := tile.distance_squared_to(target)
+		if d < best_any_d:
+			best_any_d = d
+			best_any = tile
+		if not _is_perimeter(Vector3i(tile)):
+			continue
+		if d < best_d:
+			best_d = d
+			best = tile
+
+	return best if best_d < INF else best_any
+
+
+func _is_perimeter(p: Vector3i) -> bool:
+	for d: Vector3i in [Vector3i(1, 0, 0), Vector3i(-1, 0, 0), Vector3i(0, 0, 1), Vector3i(0, 0, -1)]:
+		if grid_map.get_cell_item(p + d) != 0:
+			return true
+	return false

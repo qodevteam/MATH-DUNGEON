@@ -34,7 +34,17 @@ func remove_door_right() -> void:
 	_remove("DoorRight")
 
 
+func remove_ceiling() -> void:
+	_remove("ceiling")
+
+
+func remove_floor() -> void:
+	_remove("floor")
+
+
 func _remove(node_name: String) -> void:
 	var n := get_node_or_null(node_name)
 	if n:
-		n.queue_free()
+		# immediate free (same as the reference tutorial) so deletions on
+		# packed-scene instances persist when the scene is saved
+		n.free()
