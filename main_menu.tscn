@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://b0yliaa4aqo2j"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_rhts7"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_06t4h"]
+sky_material = SubResource("ProceduralSkyMaterial_rhts7")
+
+[sub_resource type="Environment" id="Environment_7vrkn"]
+background_mode = 2
+sky = SubResource("Sky_06t4h")
+glow_enabled = true
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.005
+
+[node name="main-menu" type="Node3D" unique_id=1137800544]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1666980584]
+environment = SubResource("Environment_7vrkn")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1327721297]
+transform = Transform3D(-0.8660259, -0.43301192, 0.24999997, -0.40731442, 0.9009634, 0.14953226, -0.28999022, 0.027670346, -0.9566299, 0, 0, 0)
+visible = false
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=205071003]
+fov = 60.09082
