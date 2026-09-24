@@ -105,13 +105,13 @@ Neighbor offsets:
   - on accept, add those 4 cells to neighbor's `PreviousSet`
 - **Cost function** (`Generator3D.cs`):
   - flat move: heuristic = distance to end; `Hallway +0`, `None +1` (carve), `Room +5`,
-    existing `Stairs` = traversable with heuristic only (**reusing stairs is free**)
+	existing `Stairs` = traversable with heuristic only (**reusing stairs is free**)
   - stair move: endpoints `a`,`b` must be `None|Hallway`; all 4 stair cells must be `None`;
-    cost = `100 + heuristic`; sets `isStairs`
+	cost = `100 + heuristic`; sets `isStairs`
 - **Carving** (on successful path):
   - `None` cells along path → `Hallway`
   - for each vertical step `delta.y != 0` from `prev`: the 4 cells
-    `prev+h`, `prev+2h`, `prev+v+h`, `prev+v+2h` → `Stairs` (2 cells at lower floor + 2 at upper)
+	`prev+h`, `prev+2h`, `prev+v+h`, `prev+v+2h` → `Stairs` (2 cells at lower floor + 2 at upper)
   - entry = `prev` (plain hallway), exit = `prev + (3,v,0)` (plain hallway)
 - **Failed paths**: `path == null` → edge skipped (leftover lines in video). Expected, not an error.
 - Runs **once at level start**; O(N²)-ish path-history cost is acceptable.
