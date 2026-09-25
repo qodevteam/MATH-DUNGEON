@@ -28,6 +28,9 @@ blend_shape_mode = 0
 [sub_resource type="BoxShape3D" id="BoxShape3D_ho38y"]
 size = Vector3(4, 0.001, 4)
 
+[sub_resource type="BoxOccluder3D" id="BoxOccluder3D_oi3di"]
+size = Vector3(3.572984, 3.4990356, 0.46)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_garic"]
 size = Vector3(4, 0.001, 4)
 
@@ -131,6 +134,12 @@ size = Vector3(3.0524907, 0.50789773, 0.4263785)
 [sub_resource type="BoxShape3D" id="BoxShape3D_ur71v"]
 size = Vector3(0.84460473, 2.9946716, 0.4263785)
 
+[sub_resource type="BoxOccluder3D" id="BoxOccluder3D_0b4ue"]
+size = Vector3(0.7737606, 3.2769728, 0.29324445)
+
+[sub_resource type="BoxOccluder3D" id="BoxOccluder3D_garic"]
+size = Vector3(3.1422732, 0.35304666, 0.29324445)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_dme45"]
 size = Vector3(3.88, 3.2769728, 0.46)
 
@@ -153,6 +162,10 @@ mesh = SubResource("ArrayMesh_garic")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ceiling/StaticBody3D" unique_id=597808373]
 shape = SubResource("BoxShape3D_ho38y")
 
+[node name="OccluderInstance3D" type="OccluderInstance3D" parent="ceiling" unique_id=808303618]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+occluder = SubResource("BoxOccluder3D_oi3di")
+
 [node name="floor" type="MeshInstance3D" parent="." unique_id=311805705]
 transform = Transform3D(8, 0, 0, 0, 7.1798563, 0, 0, 0, 8, 0, 0, 0)
 mesh = SubResource("ArrayMesh_garic")
@@ -163,6 +176,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5e-06, 0)
 [node name="CollisionShape3D" type="CollisionShape3D" parent="floor/StaticBody3D" unique_id=302562970]
 shape = SubResource("BoxShape3D_garic")
 
+[node name="OccluderInstance3D" type="OccluderInstance3D" parent="floor" unique_id=207193621]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+occluder = SubResource("BoxOccluder3D_oi3di")
+
 [node name="WallUp" type="MeshInstance3D" parent="." unique_id=1337606232]
 transform = Transform3D(9.25, 0, 3.0248166e-06, 0, 8.458, 0, -3.3080578e-06, 0, 8.458, 0, 12.5, -16)
 mesh = SubResource("BoxMesh_garic")
@@ -171,6 +188,9 @@ mesh = SubResource("BoxMesh_garic")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="WallUp/StaticBody3D" unique_id=22622054]
 shape = SubResource("BoxShape3D_8vd04")
+
+[node name="OccluderInstance3D" type="OccluderInstance3D" parent="WallUp" unique_id=204309775]
+occluder = SubResource("BoxOccluder3D_oi3di")
 
 [node name="DoorUp" type="MeshInstance3D" parent="." unique_id=471046530]
 transform = Transform3D(-10, 0, -8.016669e-07, 0, 9.17, 0, 8.742278e-07, 0, -9.17, 0, 0, -15)
@@ -211,6 +231,18 @@ shape = SubResource("BoxShape3D_h55ji")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1301873, 0.0037261248, -1.1920929e-07)
 shape = SubResource("BoxShape3D_ur71v")
 
+[node name="OccluderInstance3D" type="OccluderInstance3D" parent="DoorUp" unique_id=1824412909]
+transform = Transform3D(1, 0, 7.1054274e-15, 0, 1, 0, -7.1054274e-15, 0, 1, 1.1306739, 1.3348635, 0)
+occluder = SubResource("BoxOccluder3D_0b4ue")
+
+[node name="OccluderInstance3D2" type="OccluderInstance3D" parent="DoorUp/OccluderInstance3D" unique_id=1587864992]
+transform = Transform3D(1, 0, 7.1054274e-15, 0, 1, 0, -1.4210855e-14, 0, 1, -2.4007497, 0, 1.1920929e-07)
+occluder = SubResource("BoxOccluder3D_0b4ue")
+
+[node name="OccluderInstance3D3" type="OccluderInstance3D" parent="DoorUp/OccluderInstance3D" unique_id=1259284519]
+transform = Transform3D(1, 0, 2.842171e-14, 0, 1, 0, -3.1974423e-14, 0, 1, -1.2378845, 1.3572334, 0)
+occluder = SubResource("BoxOccluder3D_garic")
+
 [node name="WallDown" type="MeshInstance3D" parent="." unique_id=42704361]
 transform = Transform3D(9.25, 0, 0, 0, 8.458, 0, 0, 0, 8.458, 0, 12.5, 16)
 mesh = SubResource("BoxMesh_garic")
@@ -219,6 +251,9 @@ mesh = SubResource("BoxMesh_garic")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="WallDown/StaticBody3D" unique_id=323967749]
 shape = SubResource("BoxShape3D_dme45")
+
+[node name="OccluderInstance3D" type="OccluderInstance3D" parent="WallDown" unique_id=1178338142]
+occluder = SubResource("BoxOccluder3D_oi3di")
 
 [node name="DoorDown" type="MeshInstance3D" parent="." unique_id=1057502774]
 transform = Transform3D(10, 0, 0, 0, 9.17, 0, 0, 0, 9.17, 0, 0, 15)
@@ -259,6 +294,18 @@ shape = SubResource("BoxShape3D_h55ji")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1301873, 0.0037261248, -1.1920929e-07)
 shape = SubResource("BoxShape3D_ur71v")
 
+[node name="OccluderInstance3D" type="OccluderInstance3D" parent="DoorDown" unique_id=194902728]
+transform = Transform3D(1, 0, 7.1054274e-15, 0, 1, 0, -7.1054274e-15, 0, 1, 1.1306739, 1.3348635, 0)
+occluder = SubResource("BoxOccluder3D_0b4ue")
+
+[node name="OccluderInstance3D2" type="OccluderInstance3D" parent="DoorDown/OccluderInstance3D" unique_id=1416009770]
+transform = Transform3D(1, 0, 7.1054274e-15, 0, 1, 0, -1.4210855e-14, 0, 1, -2.4007497, 0, 1.1920929e-07)
+occluder = SubResource("BoxOccluder3D_0b4ue")
+
+[node name="OccluderInstance3D3" type="OccluderInstance3D" parent="DoorDown/OccluderInstance3D" unique_id=2146275156]
+transform = Transform3D(1, 0, 2.842171e-14, 0, 1, 0, -3.1974423e-14, 0, 1, -1.2378845, 1.3572334, 0)
+occluder = SubResource("BoxOccluder3D_garic")
+
 [node name="WallRight" type="MeshInstance3D" parent="." unique_id=1637750398]
 transform = Transform3D(-4.0433034e-07, 0, 8.458, 0, 8.458, 0, -9.25, 0, -3.6971093e-07, 16, 12.5, 0)
 mesh = SubResource("BoxMesh_garic")
@@ -267,6 +314,9 @@ mesh = SubResource("BoxMesh_garic")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="WallRight/StaticBody3D" unique_id=637329142]
 shape = SubResource("BoxShape3D_g1tow")
+
+[node name="OccluderInstance3D" type="OccluderInstance3D" parent="WallRight" unique_id=333831942]
+occluder = SubResource("BoxOccluder3D_oi3di")
 
 [node name="DoorRight" type="MeshInstance3D" parent="." unique_id=673357373]
 transform = Transform3D(-4.371139e-07, 0, 9.17, 0, 9.17, 0, -10, 0, -4.0083344e-07, 15, 0, 0)
@@ -307,6 +357,18 @@ shape = SubResource("BoxShape3D_h55ji")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1301873, 0.0037261248, -1.1920929e-07)
 shape = SubResource("BoxShape3D_ur71v")
 
+[node name="OccluderInstance3D" type="OccluderInstance3D" parent="DoorRight" unique_id=169684419]
+transform = Transform3D(1, 0, 7.1054274e-15, 0, 1, 0, -7.1054274e-15, 0, 1, 1.1306739, 1.3348635, 0)
+occluder = SubResource("BoxOccluder3D_0b4ue")
+
+[node name="OccluderInstance3D2" type="OccluderInstance3D" parent="DoorRight/OccluderInstance3D" unique_id=1849943621]
+transform = Transform3D(1, 0, 7.1054274e-15, 0, 1, 0, -1.4210855e-14, 0, 1, -2.4007497, 0, 1.1920929e-07)
+occluder = SubResource("BoxOccluder3D_0b4ue")
+
+[node name="OccluderInstance3D3" type="OccluderInstance3D" parent="DoorRight/OccluderInstance3D" unique_id=45006072]
+transform = Transform3D(1, 0, 2.842171e-14, 0, 1, 0, -3.1974423e-14, 0, 1, -1.2378845, 1.3572334, 0)
+occluder = SubResource("BoxOccluder3D_garic")
+
 [node name="WallLeft" type="MeshInstance3D" parent="." unique_id=708934384]
 transform = Transform3D(-4.0433034e-07, 0, 8.458, 0, 8.458, 0, -9.25, 0, -3.6971093e-07, -16, 12.5, 0)
 mesh = SubResource("BoxMesh_garic")
@@ -315,6 +377,9 @@ mesh = SubResource("BoxMesh_garic")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="WallLeft/StaticBody3D" unique_id=1262197988]
 shape = SubResource("BoxShape3D_uh6c3")
+
+[node name="OccluderInstance3D" type="OccluderInstance3D" parent="WallLeft" unique_id=1064375318]
+occluder = SubResource("BoxOccluder3D_oi3di")
 
 [node name="DoorLeft" type="MeshInstance3D" parent="." unique_id=1530068033]
 transform = Transform3D(-4.371139e-07, 0, -9.17, 0, 9.17, 0, 10, 0, -4.0083344e-07, -15, 0, 0)
@@ -354,3 +419,15 @@ shape = SubResource("BoxShape3D_h55ji")
 [node name="CollisionShape3D3" type="CollisionShape3D" parent="DoorLeft/StaticBody3D" unique_id=488894388]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1301873, 0.0037261248, -1.1920929e-07)
 shape = SubResource("BoxShape3D_ur71v")
+
+[node name="OccluderInstance3D" type="OccluderInstance3D" parent="DoorLeft" unique_id=1174287380]
+transform = Transform3D(1, 0, 7.1054274e-15, 0, 1, 0, -7.1054274e-15, 0, 1, 1.1306739, 1.3348635, 0)
+occluder = SubResource("BoxOccluder3D_0b4ue")
+
+[node name="OccluderInstance3D2" type="OccluderInstance3D" parent="DoorLeft/OccluderInstance3D" unique_id=1749969764]
+transform = Transform3D(1, 0, 7.1054274e-15, 0, 1, 0, -1.4210855e-14, 0, 1, -2.4007497, 0, 1.1920929e-07)
+occluder = SubResource("BoxOccluder3D_0b4ue")
+
+[node name="OccluderInstance3D3" type="OccluderInstance3D" parent="DoorLeft/OccluderInstance3D" unique_id=1466843372]
+transform = Transform3D(1, 0, 2.842171e-14, 0, 1, 0, -3.1974423e-14, 0, 1, -1.2378845, 1.3572334, 0)
+occluder = SubResource("BoxOccluder3D_garic")
