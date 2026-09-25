@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://lrq251chyj0"
-path="res://.godot/imported/dungeon_cell.fbx-9fa30563087dfbf551ff5c7fb132d41f.scn"
+uid="uid://cygvtv8vg66nc"
+path="res://.godot/imported/low poly dungeon assets.fbx-97234239452814dcfca8e6f4c08b5fd2.scn"
 
 [deps]
 
-source_file="res://dungeon_cell.fbx"
-dest_files=["res://.godot/imported/dungeon_cell.fbx-9fa30563087dfbf551ff5c7fb132d41f.scn"]
+source_file="res://blender assets/Free Modular Low Poly Dungeon/low poly dungeon assets.fbx"
+dest_files=["res://.godot/imported/low poly dungeon assets.fbx-97234239452814dcfca8e6f4c08b5fd2.scn"]
 
 [params]
 

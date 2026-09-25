@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://cpm6m3o4tt18r"
-path="res://.godot/imported/dungeon_cell2.fbx-72573df91d6eb5de65dd5fdb90513094.scn"
+uid="uid://bbryfpuk02uvs"
+path="res://.godot/imported/DUNGEON_CELLTEST.fbx-7871539d54e10e636808b3772ecde510.scn"
 
 [deps]
 
-source_file="res://dungeon_cell2.fbx"
-dest_files=["res://.godot/imported/dungeon_cell2.fbx-72573df91d6eb5de65dd5fdb90513094.scn"]
+source_file="res://DUNGEON_CELLTEST.fbx"
+dest_files=["res://.godot/imported/DUNGEON_CELLTEST.fbx-7871539d54e10e636808b3772ecde510.scn"]
 
 [params]
 
