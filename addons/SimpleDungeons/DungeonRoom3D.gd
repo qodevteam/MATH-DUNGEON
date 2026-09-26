@@ -164,7 +164,7 @@ var _debug_view = null
 func add_debug_view_if_not_exist():
 	if not _debug_view:
 		_debug_view = preload("res://addons/SimpleDungeons/debug_visuals/DungeonRoom3DDebugView.gd").new()
-		add_child(_debug_view)
+		add_child(_debug_view, false, Node.INTERNAL_MODE_BACK) # internal: never duplicated/saved (avoids "Child node disappeared while duplicating")
 
 ###########
 ## DOORS ##

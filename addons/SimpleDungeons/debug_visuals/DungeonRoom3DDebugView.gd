@@ -15,7 +15,7 @@ func update_door_visuals(show_visuals : bool):
 	# Add/remove debug visuals to match
 	while len(door_visuals) < len(room_doors):
 		var door_visual = preload("res://addons/SimpleDungeons/debug_visuals/DoorDebugVisual.tscn").instantiate()
-		add_child(door_visual)
+		add_child(door_visual, false, Node.INTERNAL_MODE_BACK)
 		door_visuals.push_back(door_visual)
 	while len(door_visuals) > len(room_doors):
 		var door_visual = door_visuals.pop_back()
@@ -52,7 +52,7 @@ func update_visual():
 	
 	if not wireframe_cube or not is_instance_valid(wireframe_cube):
 		wireframe_cube = preload("res://addons/SimpleDungeons/debug_visuals/WireframeCube.tscn").instantiate()
-		add_child(wireframe_cube)
+		add_child(wireframe_cube, false, Node.INTERNAL_MODE_BACK)
 	wireframe_cube.scale = Vector3(dungeon_room.size_in_voxels) * dungeon_room.voxel_scale
 	wireframe_cube.grid_size = dungeon_room.size_in_voxels
 	wireframe_cube.show_coordinates = false
@@ -62,7 +62,7 @@ func update_visual():
 	if not aabb_with_doors:
 		aabb_with_doors = CSGBox3D.new()
 		aabb_with_doors.material = preload("res://addons/SimpleDungeons/debug_visuals/WireframeColorMat.tres")
-		add_child(aabb_with_doors)
+		add_child(aabb_with_doors, false, Node.INTERNAL_MODE_BACK)
 	var rel_room_aabb = dungeon_room.xform_aabb(dungeon_room.get_grid_aabbi(true).to_AABB(), dungeon_room.get_xform_to(DungeonRoom3D.SPACE.DUNGEON_GRID, DungeonRoom3D.SPACE.LOCAL_SPACE)).abs()
 	aabb_with_doors.size = rel_room_aabb.size if dungeon_room.show_grid_aabb_with_doors else Vector3()
 	aabb_with_doors.position = rel_room_aabb.get_center()
@@ -70,7 +70,7 @@ func update_visual():
 	
 	if not debug_alert or not is_instance_valid(debug_alert):
 		debug_alert = preload("res://addons/SimpleDungeons/debug_visuals/DebugAlert.tscn").instantiate()
-		add_child(debug_alert)
+		add_child(debug_alert, false, Node.INTERNAL_MODE_BACK)
 	
 	debug_alert.scale = Vector3(dungeon_room.voxel_scale.y/10.0, dungeon_room.voxel_scale.y/10.0, dungeon_room.voxel_scale.y/10.0)
 	debug_alert.position = ((Vector3(dungeon_room.size_in_voxels) / 2) + Vector3(0,0.35,0)) * Vector3(0, dungeon_room.voxel_scale.y, 0)

@@ -65,12 +65,19 @@ var stage : BuildStage = BuildStage.NOT_STARTED :
 ## they also need the @tool directive for this to work.
 @export var editor_button_generate_dungeon : bool = false :
 	set(value):
-		generate()
+		# Only fire on an explicit true press. duplicate() copies exported
+		# properties too - acting on any write destroyed RoomsContainer
+		# mid-duplication ("Child node disappeared while duplicating").
+		editor_button_generate_dungeon = false
+		if value:
+			generate()
 
 ## Abort the generation started in editor
 @export var abort_editor_button : bool = false :
 	set(value):
-		abort_generation()
+		abort_editor_button = false
+		if value:
+			abort_generation()
 
 @export_group("AStar room connection options")
 enum AStarHeuristics { NONE_DIJKSTRAS = 0, MANHATTAN = 1, EUCLIDEAN = 2 }
@@ -121,7 +128,7 @@ var _debug_view = null
 func add_debug_view_if_not_exist():
 	if not _debug_view:
 		_debug_view = preload("res://addons/SimpleDungeons/debug_visuals/DungeonGenerator3DDebugView.gd").new()
-		add_child(_debug_view)
+		add_child(_debug_view, false, Node.INTERNAL_MODE_BACK) # internal: never duplicated/saved (avoids "Child node disappeared while duplicating")
 
 func _ready():
 	add_debug_view_if_not_exist()
@@ -769,6 +776,11 @@ func create_or_recreate_rooms_container() -> void:
 		rc.queue_free()
 	rooms_container = Node3D.new()
 	rooms_container.name = "RoomsContainer"
+	var level_configurator = load("res://addons/SimpleDungeons/levelconfigurator.gd")
+	if level_configurator:
+		rooms_container.set_script(level_configurator)
+	else:
+		_printwarning("levelconfigurator.gd not found - debug visuals will stay visible.")
 	if visualize_generation_progress:
 		add_child(rooms_container)
 

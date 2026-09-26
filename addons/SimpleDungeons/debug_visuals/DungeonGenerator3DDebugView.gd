@@ -22,13 +22,13 @@ func update_visual():
 	if not wireframe_cube or not is_instance_valid(wireframe_cube):
 		wireframe_cube = preload("res://addons/SimpleDungeons/debug_visuals/WireframeCube.tscn").instantiate()
 		wireframe_cube.enable_depth_test = true
-		add_child(wireframe_cube)
+		add_child(wireframe_cube, false, Node.INTERNAL_MODE_BACK)
 	wireframe_cube.scale = Vector3(dungeon_generator.dungeon_size) * dungeon_generator.voxel_scale
 	wireframe_cube.grid_size = dungeon_generator.dungeon_size
 	
 	if not debug_alert or not is_instance_valid(debug_alert):
 		debug_alert = preload("res://addons/SimpleDungeons/debug_visuals/DebugAlert.tscn").instantiate()
-		add_child(debug_alert)
+		add_child(debug_alert, false, Node.INTERNAL_MODE_BACK)
 	
 	debug_alert.scale = Vector3(dungeon_generator.voxel_scale.y/5.0, dungeon_generator.voxel_scale.y/5.0, dungeon_generator.voxel_scale.y/5.0)
 	debug_alert.position = ((Vector3(dungeon_generator.dungeon_size) / 2) + Vector3(0,0.35,0)) * Vector3(0, dungeon_generator.voxel_scale.y, 0)
