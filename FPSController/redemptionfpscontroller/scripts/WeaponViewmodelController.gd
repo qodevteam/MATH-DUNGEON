@@ -177,6 +177,7 @@ func _ready() -> void:
 		_strip_stale_idle_track()
 		_warn_if_animator_targets_weapon_node()
 		animator.stop()
+		animator.speed_scale = 1.3
 	else:
 		push_warning("WeaponViewmodelController: no AnimationPlayer found - baked fire/reload animations are disabled, procedural motion only.")
 
@@ -453,7 +454,6 @@ func _reload_next_bullet() -> void:
 		_finish_reload()
 		return
 	reload_step += 1
-	animator.speed_scale = 1.5
 	animator.play(reload_bullet_anim)
 	bullet_loaded.emit(reload_step)
 
@@ -503,7 +503,6 @@ func _on_anim_finished(anim_name: String) -> void:
 	elif anim_name == start_reload_anim:
 		_reload_next_bullet()
 	elif anim_name == reload_bullet_anim:
-		animator.speed_scale = 1.0
 		if _is_magazine_full():
 			_finish_reload()
 		else:

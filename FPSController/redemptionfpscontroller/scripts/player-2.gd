@@ -553,21 +553,28 @@ func _walk(delta: float) -> Vector3:
 	return walk_vel
 
 func _gravity(delta: float) -> Vector3:
-	grav_vel = Vector3.ZERO if is_on_floor() else \
-		grav_vel.move_toward(Vector3(0, velocity.y - gravity, 0), gravity * delta)
+	if is_on_floor():
+		# Press into the floor until physics reports a collision —
+		# never zeroed mid-contact by the script.
+		# When movement is frozen (no move_and_slide to absorb it), keep zero
+		# so idle velocity stays clean for viewmodel/COS checks.
+		grav_vel = Vector3(0.0, -gravity * delta, 0.0) if moveAllowed else Vector3.ZERO
+	else:
+		# Airborne — continue integrating gravity independently of jump momentum.
+		grav_vel = Vector3(0.0, grav_vel.y - gravity * delta, 0.0)
 	return grav_vel
 
-func _jump(delta: float) -> Vector3:
+func _jump(_delta: float) -> Vector3:
 	if jumping and is_on_floor():
 		# Perform the jump
-		jump_vel = Vector3(0, sqrt(4 * jump_height * gravity), 0)
+		jump_vel = Vector3(0.0, sqrt(4.0 * jump_height * gravity), 0.0)
 		jumping = false
 	elif is_on_floor():
 		jump_vel = Vector3.ZERO
 	else:
-		# Apply gravity to current jump velocity while in air
-		jump_vel = jump_vel.move_toward(Vector3.ZERO, gravity * delta)
-
+		# Decay jump momentum in air — gives a snappy ascent (2g)
+		# while _gravity owns the falling side (1g + floor press).
+		jump_vel = jump_vel.move_toward(Vector3.ZERO, gravity * _delta)
 	return jump_vel
 
 
