@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://baabhoi64maxm"
+path="res://.godot/imported/shell load.mp3-a8eedf635be84c96f5326814e56630a8.mp3str"
+
+[deps]
+
+source_file="res://FPSController/redemptionfpscontroller/audio/soundeffects/shell reload/shell load.mp3"
+dest_files=["res://.godot/imported/shell load.mp3-a8eedf635be84c96f5326814e56630a8.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

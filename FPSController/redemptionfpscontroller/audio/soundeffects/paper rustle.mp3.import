@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://istsllmh7uat"
+path="res://.godot/imported/paper rustle.mp3-6d7a3e68daaceabb153c16c1c0bac49d.mp3str"
+
+[deps]
+
+source_file="res://FPSController/redemptionfpscontroller/audio/soundeffects/paper rustle.mp3"
+dest_files=["res://.godot/imported/paper rustle.mp3-6d7a3e68daaceabb153c16c1c0bac49d.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

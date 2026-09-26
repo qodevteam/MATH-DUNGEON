@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://tplql3hw5c3j"
+path="res://.godot/imported/Kicking_ Forcing_ Breaking  Wooden  Door.mp3-103f57accc5c0dd8ef2b8a040618b3ff.mp3str"
+
+[deps]
+
+source_file="res://FPSController/redemptionfpscontroller/audio/soundeffects/Kicking_ Forcing_ Breaking  Wooden  Door.mp3"
+dest_files=["res://.godot/imported/Kicking_ Forcing_ Breaking  Wooden  Door.mp3-103f57accc5c0dd8ef2b8a040618b3ff.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

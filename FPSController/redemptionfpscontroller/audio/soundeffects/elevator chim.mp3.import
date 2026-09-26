@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://nedjq28v5c1s"
+path="res://.godot/imported/elevator chim.mp3-cc4489dc709fe93710efbde2f5d68d26.mp3str"
+
+[deps]
+
+source_file="res://FPSController/redemptionfpscontroller/audio/soundeffects/elevator chim.mp3"
+dest_files=["res://.godot/imported/elevator chim.mp3-cc4489dc709fe93710efbde2f5d68d26.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

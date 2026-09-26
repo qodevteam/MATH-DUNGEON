@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://b8l7ytsucyue5"]
+
+[ext_resource type="Script" uid="uid://b3a3hm4fb2oqn" path="res://FPSController/redemptionfpscontroller/scripts/Pellet.gd" id="1"]
+
+[sub_resource type="StandardMaterial3D" id="2"]
+albedo_color = Color(1, 0.7, 0.2, 1)
+emission_enabled = true
+emission = Color(1, 0.7, 0.1, 1)
+emission_energy_multiplier = 12.0
+
+[sub_resource type="SphereMesh" id="3"]
+material = SubResource("2")
+radius = 0.25
+height = 0.5
+
+[sub_resource type="SphereShape3D" id="1"]
+radius = 0.02
+
+[node name="Pellet" type="RigidBody3D" unique_id=864360479]
+mass = 0.05
+can_sleep = false
+script = ExtResource("1")
+lifetime = 5.0
+pellet_gravity = 1.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=320119724]
+mesh = SubResource("3")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1529225610]
+light_color = Color(1, 0.7, 0.1, 1)
+light_energy = 2.0
+omni_range = 0.5
+omni_attenuation = 1.5
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1363537397]
+shape = SubResource("1")

@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://b3k5hy48c8m6"
+path="res://.godot/imported/gun foley1.ogg-56b30809cd89f7fc4cd71881d0e1598e.oggvorbisstr"
+
+[deps]
+
+source_file="res://FPSController/redemptionfpscontroller/audio/gun foley1.ogg"
+dest_files=["res://.godot/imported/gun foley1.ogg-56b30809cd89f7fc4cd71881d0e1598e.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
