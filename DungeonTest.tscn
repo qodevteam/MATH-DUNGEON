@@ -6,7 +6,6 @@
 [ext_resource type="Script" uid="uid://4wre1x803ka" path="res://FPSController/redemptionfpscontroller/scripts/PelletRaycast.gd" id="3_kslcm"]
 [ext_resource type="PackedScene" uid="uid://csrej0276i7aa" path="res://multiplayer_example/example_rooms/living_room.tscn" id="3_lhbkb"]
 [ext_resource type="PackedScene" uid="uid://b8l7ytsucyue5" path="res://FPSController/redemptionfpscontroller/scenes/pellet.tscn" id="4_kde0i"]
-[ext_resource type="PackedScene" uid="uid://uvjwegylgdb" path="res://multiplayer_example/example_rooms/stair.tscn" id="4_wb8ld"]
 [ext_resource type="PackedScene" uid="uid://crr6031qmir35" path="res://addons/SimpleDungeons/sample_dungeons/mansion/rooms/bedroom.tscn" id="4_yxm5t"]
 [ext_resource type="PackedScene" uid="uid://bicoj8112x1ra" path="res://addons/SimpleDungeons/sample_dungeons/lowpoly_kit_1_rooms/trap_room.tscn" id="5_hij8h"]
 [ext_resource type="Script" uid="uid://kbdrv06fdhbi" path="res://FPSController/redemptionfpscontroller/scripts/ControllerManager.gd" id="5_t4u0d"]
@@ -14,11 +13,11 @@
 [ext_resource type="Script" uid="uid://c2l506b20cr8l" path="res://addons/SimpleDungeons/DungeonRoom3D.gd" id="6_huxqn"]
 [ext_resource type="Script" uid="uid://ck0i7qqw65bhg" path="res://FPSController/redemptionfpscontroller/scripts/CursorManager.gd" id="6_t2ldh"]
 [ext_resource type="Texture2D" uid="uid://dedtwku3flpwn" path="res://misc/cursor xp_point.png" id="7_1pk0w"]
-[ext_resource type="Script" uid="uid://dfij51ilty3rk" path="res://addons/SimpleDungeons/utils/RandomNumberMultiplayer.gd" id="8_82h5t"]
 [ext_resource type="Texture2D" uid="uid://c3bbirq6hrrbg" path="res://misc/cursor xp_hover.png" id="8_irmb4"]
 [ext_resource type="Texture2D" uid="uid://b2c5cqp35jayo" path="res://misc/cursor xp_invalid bigger.png" id="9_8mjjq"]
 [ext_resource type="Shader" uid="uid://yf41d5r24g7j" path="res://posterization-final.gdshader" id="10_bdw0i"]
 [ext_resource type="Shader" uid="uid://bucmseifyfuy8" path="res://FPSController/redemptionfpscontroller/scenes/fish-eye.gdshader" id="11_8b88a"]
+[ext_resource type="PackedScene" uid="uid://c5lo6wkhhg76p" path="res://addons/SimpleDungeons/sample_dungeons/lowpoly_kit_1_rooms/stair.tscn" id="13_m3nkq"]
 [ext_resource type="PackedScene" uid="uid://b6t2tduxk8tfn" path="res://addons/SimpleDungeons/sample_dungeons/lowpoly_kit_1_rooms/living_room.tscn" id="17_3ukw0"]
 [ext_resource type="PackedScene" uid="uid://dvdly7xo8rxig" path="res://addons/SimpleDungeons/sample_dungeons/lowpoly_kit_1_rooms/corridor.tscn" id="18_py2qv"]
 [ext_resource type="Script" uid="uid://bntqon5fuv4oq" path="res://FPSController/redemptionfpscontroller/scripts/player-2.gd" id="21_32lns"]
@@ -2651,9 +2650,9 @@ script = ExtResource("3_kslcm")
 spread_angle = 5.0
 damage_per_pellet = 12
 pellet_speed = 80.0
-barrel_origin = NodePath("")
-camera = NodePath("")
-weapon_viewmodel = NodePath("")
+barrel_origin = NodePath("../../Player/CameraGimbal/InnerGimbal/Camera/player-shotgun-main/BarrelOrigin")
+camera = NodePath("../../Player/CameraGimbal/InnerGimbal/Camera")
+weapon_viewmodel = NodePath("../../Player/CameraGimbal/InnerGimbal/Camera/player-shotgun-main/WeaponViewmodel")
 pellet_scene = ExtResource("4_kde0i")
 
 [node name="controller manager" type="Node" parent="managers" unique_id=63987635 node_paths=PackedStringArray("cursor")]
@@ -2727,13 +2726,12 @@ text = "Generating dungeon ahead. Press v to noclip and fly in."
 [node name="DungeonGenerator3D" type="Node3D" parent="." unique_id=937620738]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -109.939)
 script = ExtResource("2_eg2pk")
-room_scenes = Array[PackedScene]([ExtResource("4_wb8ld"), ExtResource("4_yxm5t"), ExtResource("5_hij8h"), ExtResource("6_3ujxl"), ExtResource("17_3ukw0"), ExtResource("18_py2qv")])
+room_scenes = Array[PackedScene]([ExtResource("13_m3nkq"), ExtResource("4_yxm5t"), ExtResource("5_hij8h"), ExtResource("6_3ujxl"), ExtResource("17_3ukw0"), ExtResource("18_py2qv")])
 corridor_room_scene = ExtResource("18_py2qv")
-max_retries = 0
+voxel_scale = Vector3(15, 15, 15)
+max_retries = 3
 generate_threaded = true
-show_debug_in_game = true
 place_even_if_fail = true
-visualize_generation_progress = true
 
 [node name="LivingRoom" parent="DungeonGenerator3D" unique_id=825286794 instance=ExtResource("3_lhbkb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 45, 40)
@@ -2751,7 +2749,7 @@ use_collision = true
 size = Vector3(5, 1, 63.7)
 
 [node name="Player" type="CharacterBody3D" parent="." unique_id=1008603749 node_paths=PackedStringArray("collision_shape", "crouch_animation_player", "camera_effects", "weapon_viewmodel")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.046213, 0)
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 8.046213, 0)
 floor_constant_speed = true
 safe_margin = 0.05
 script = ExtResource("21_32lns")
@@ -2781,7 +2779,7 @@ step_max_height = 5.0
 libraries/ = SubResource("AnimationLibrary_kslcm")
 
 [node name="PLAYER-BODY" type="CollisionShape3D" parent="Player" unique_id=1113646801]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.284234, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -6.694146, 0)
 shape = SubResource("CapsuleShape3D_kde0i")
 debug_color = Color(0, 0.85000014, 1, 1)
 
@@ -3565,9 +3563,10 @@ mesh = SubResource("ArrayMesh_8b88a")
 
 [node name="SpotLight3D2" type="SpotLight3D" parent="Player/CameraGimbal/InnerGimbal/Camera/player-shotgun-main/player-shotgun/shotgun/Object_2/RootNode/Armature/Object_5/Skeleton3D/BoneAttachment3D2/BoneAttachment3D2/picatinny_mount_mount_0/flashlightbody" unique_id=904547644]
 transform = Transform3D(1, -4.3732907e-08, 8.731159e-10, 4.3732907e-08, 1, 1.6370898e-10, -8.731159e-10, -1.6370894e-10, 1, -2.5749207e-05, 0.00012663007, -0.0011962857)
-light_energy = 16.0
+light_energy = 4.598
 light_projector = SubResource("CompressedTexture2D_32lns")
 light_size = 1.0
+light_specular = 0.0
 shadow_enabled = true
 shadow_bias = 1.0
 shadow_opacity = 0.43
@@ -3892,8 +3891,4 @@ theme_override_font_sizes/font_size = 12
 text = "DEBUG PANEL"
 metadata/_edit_use_anchors_ = true
 
-[node name="RandomNumberMultiplayer" type="Node" parent="." unique_id=987720185]
-script = ExtResource("8_82h5t")
-
 [connection signal="timeout" from="Player/CanvasLayer/HitSight/HitSightTimer" to="Player/CanvasLayer" method="_on_hit_sight_timer_timeout"]
-[connection signal="got_random_int" from="RandomNumberMultiplayer" to="DungeonGenerator3D" method="generate"]
