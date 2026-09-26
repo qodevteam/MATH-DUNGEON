@@ -136,7 +136,10 @@ func _process(delta):
 		for c in get_children():
 			if c is DungeonRoom3D and not c.virtualized_from:
 				c.add_debug_view_if_not_exist()
-		return
+		# Keep the visualize-generation loop alive in editor (generate() pauses
+		# between iterations waiting for this _process call to resume it).
+		if not _visualization_in_progress:
+			return
 	if _visualization_in_progress and Time.get_ticks_msec() - _last_iteration_end_time > visualize_generation_wait_between_iterations:
 		_run_generate_loop(false)
 
