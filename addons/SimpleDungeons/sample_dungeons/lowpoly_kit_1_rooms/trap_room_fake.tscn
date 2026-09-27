@@ -458,6 +458,7 @@ size = Vector3(10, 10, 10)
 
 [node name="TrapRoomFake" type="Node3D" unique_id=1486102770 groups=["traproomfake"]]
 script = SubResource("GDScript_mxioc")
+size_in_voxels = Vector3i(1, 2, 1)
 show_debug_in_editor = false
 
 [node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=1823463721]
@@ -555,6 +556,45 @@ script = ExtResource("1_eol32")
 
 [node name="interactunlock" type="AnimationPlayer" parent="Models/Node3D2/Lever/Area3D" unique_id=1447803982]
 libraries/ = SubResource("AnimationLibrary_opgwl")
+
+[node name="torch_001" type="MeshInstance3D" parent="Models/Node3D2/Lever" unique_id=702631756]
+transform = Transform3D(1, -6.930847e-19, -1.4551915e-11, 0, -4.371138e-08, 0.9999999, 0, -0.99999976, -4.371139e-08, 1.2378498, -0.089692116, 0)
+mesh = SubResource("ArrayMesh_opgwl")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Models/Node3D2/Lever/torch_001" unique_id=1801939506]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00581044, 0.613317, 0.52377)
+light_color = Color(1, 0.537255, 0.258824, 1)
+
+[node name="Lever2" type="Node3D" parent="Models/Node3D2" unique_id=740412909]
+transform = Transform3D(-0.0001744961, 0.71521384, -3.1262967e-08, 1.523802e-22, -3.5296406e-08, -0.8074882, -0.80748814, -0.00015453911, 6.7566573e-12, 0.05340457, 1.8985255, -2.458637)
+
+[node name="lever base" type="MeshInstance3D" parent="Models/Node3D2/Lever2" unique_id=1340762523]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, -8.35187e-23, 1, -0.467758, 0.12137, 0.288792)
+mesh = SubResource("ArrayMesh_7tc5l")
+
+[node name="lever" type="MeshInstance3D" parent="Models/Node3D2/Lever2" unique_id=1079665165]
+transform = Transform3D(1, 0, 0, 0, 0.805928, 0.592013, 0, -0.592013, 0.805928, -0.467758, 0.308525, 0.290306)
+mesh = SubResource("ArrayMesh_wex2j")
+
+[node name="Area3D" type="Area3D" parent="Models/Node3D2/Lever2" unique_id=1935809470]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.467758, 0.2078, 0.2103)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Models/Node3D2/Lever2/Area3D" unique_id=477660893]
+shape = SubResource("BoxShape3D_levr")
+
+[node name="InteractableComponent" type="Node" parent="Models/Node3D2/Lever2/Area3D" unique_id=1287812566]
+script = ExtResource("1_eol32")
+
+[node name="interactunlock" type="AnimationPlayer" parent="Models/Node3D2/Lever2/Area3D" unique_id=1708121314]
+libraries/ = SubResource("AnimationLibrary_opgwl")
+
+[node name="torch_001" type="MeshInstance3D" parent="Models/Node3D2/Lever2" unique_id=92837685]
+transform = Transform3D(1, -6.930847e-19, -1.4551915e-11, 0, -4.371138e-08, 0.9999999, 0, -0.99999976, -4.371139e-08, 1.2378498, -0.089692116, 0)
+mesh = SubResource("ArrayMesh_opgwl")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Models/Node3D2/Lever2/torch_001" unique_id=1658100447]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00581044, 0.613317, 0.52377)
+light_color = Color(1, 0.537255, 0.258824, 1)
 
 [node name="L_WALL" type="MeshInstance3D" parent="Models/Node3D2" unique_id=1056940462]
 transform = Transform3D(0.0042585763, 0, 0.8857191, 0, 1.0000001, 0, -1.1290059, 0, 0.004258576, 0, 0, 0.3670106)

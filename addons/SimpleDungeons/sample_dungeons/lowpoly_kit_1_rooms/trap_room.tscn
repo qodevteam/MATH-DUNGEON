@@ -6,17 +6,20 @@
 script/source = "@tool
 extends DungeonRoom3D
 
-signal trap_triggered(room_name: String)
+signal trap_unlocked(room_name: String)
 
 var pressed_lever_down = false
+var _setup_done = false
 
-func _ready() -> void:
-	super._ready()
+func _process(_delta):
+	if _setup_done or not is_inside_tree():
+		return
+	_setup_done = true
 	if not pressed_lever_down:
 		call_deferred(\"_connect_interact\")
 
 func _connect_interact() -> void:
-	var ic: InteractableComponent = get_node_or_null(\"Models/Lever/Area3D/InteractableComponent\")
+	var ic = get_node_or_null(\"Models/Node3D2/Lever/Area3D/InteractableComponent\")
 	if ic:
 		ic.interacted.connect(_on_interact)
 
@@ -24,10 +27,11 @@ func _on_interact() -> void:
 	if pressed_lever_down:
 		return
 	pressed_lever_down = true
-	$Models/Lever/lever.rotation.x *= -1
-	$TrapFloor.queue_free()
-	$Models/floor.queue_free()
-	trap_triggered.emit(name)
+	$Models/Node3D2/Lever/lever.rotation.x *= -1
+	var ap = get_node_or_null(\"Models/Node3D2/Lever/Area3D/interactunlock\")
+	if ap:
+		ap.play(\"trap_door_fake_unlocked\")
+	trap_unlocked.emit(name)
 "
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_upkxj"]
