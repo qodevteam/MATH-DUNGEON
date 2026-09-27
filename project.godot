@@ -39,6 +39,11 @@ project/assembly_name="MATH DUNGEON"
 
 enabled=PackedStringArray("res://addons/SceneBuilder/plugin.cfg", "res://addons/SimpleDungeons/plugin.cfg", "res://addons/godot_ai/plugin.cfg")
 
+[global_group]
+
+traproomfake=""
+traproomlegit=""
+
 [input]
 
 ui_accept={

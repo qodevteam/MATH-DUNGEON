@@ -24,6 +24,14 @@ var stage : BuildStage = BuildStage.NOT_STARTED :
 ## The corridor room is a special room scene which must be a 1x1x1 (in voxels) scene inheriting DungeonRoom which is used to connect all the placed rooms.
 @export var corridor_room_scene : PackedScene
 
+## Trap room fake is placed in the middle of corridors instead of a regular corridor.
+## Must be a 1x1x1 DungeonRoom3D scene.
+@export var trap_room_fake_scene : PackedScene
+
+## Chance (0.0 - 1.0) that a trap_room_fake spawns instead of a regular corridor.
+## 0 = never, 1 = every corridor becomes trap_room_fake. Recommended: 0.1 - 0.25
+@export_range(0.0, 1.0, 0.01) var trap_room_fake_spawn_chance : float = 0.15
+
 ## Dungeon grid size measured in voxel units, voxel size is chosen in the voxel_scale property.
 @export var dungeon_size := Vector3i(10,10,10) :
 	set(v):
@@ -159,6 +167,7 @@ func _process(delta):
 
 var room_instances : Array[DungeonRoom3D]
 var corridor_room_instance : DungeonRoom3D
+var _trap_room_fake_instance : DungeonRoom3D
 var iterations := 0
 var retry_attempts := 0
 var rooms_container : Node3D
@@ -689,7 +698,7 @@ func connect_rooms_iteration(first_call_in_loop : bool) -> void:
 		#print("Connecting ", room_a.name, " to ", _rooms_to_connect[0].name, ". Result: ", connect_path)
 		for corridor_pos in connect_path:
 			if not _quick_room_check_dict.has(corridor_pos) and not _quick_corridors_check_dict.has(corridor_pos):
-				var room := corridor_room_instance.create_clone_and_make_virtual_unless_visualizing()
+				var room := _get_corridor_or_trap_room_fake(corridor_pos)
 				room.set_position_by_grid_pos(corridor_pos)
 				place_room(room)
 				_quick_corridors_check_dict[corridor_pos] = room
@@ -718,7 +727,7 @@ func connect_rooms_iteration(first_call_in_loop : bool) -> void:
 		var connect_path := _astar3d.get_vec3i_path(required_door.exit_pos_grid, closest_other_room_doors[0].exit_pos_grid)
 		for corridor_pos in connect_path:
 			if not _quick_room_check_dict.has(corridor_pos) and not _quick_corridors_check_dict.has(corridor_pos):
-				var room := corridor_room_instance.create_clone_and_make_virtual_unless_visualizing()
+				var room := _get_corridor_or_trap_room_fake(corridor_pos)
 				room.set_position_by_grid_pos(corridor_pos)
 				place_room(room)
 				_quick_corridors_check_dict[corridor_pos] = room
@@ -726,6 +735,11 @@ func connect_rooms_iteration(first_call_in_loop : bool) -> void:
 		return
 	
 	stage = BuildStage.FINALIZING
+
+func _get_corridor_or_trap_room_fake(grid_pos: Vector3i) -> DungeonRoom3D:
+	if _trap_room_fake_instance and rng.randf() < trap_room_fake_spawn_chance:
+		return _trap_room_fake_instance.create_clone_and_make_virtual_unless_visualizing()
+	return corridor_room_instance.create_clone_and_make_virtual_unless_visualizing()
 
 ####################################
 ## DUNGEON BUILD HELPER FUNCTIONS ##
@@ -806,8 +820,11 @@ func _clear_room_instances() -> void:
 			room.queue_free()
 	if corridor_room_instance and is_instance_valid(corridor_room_instance):
 		corridor_room_instance.queue_free()
+	if _trap_room_fake_instance and is_instance_valid(_trap_room_fake_instance):
+		_trap_room_fake_instance.queue_free()
 	room_instances = []
 	corridor_room_instance = null
+	_trap_room_fake_instance = null
 
 func cleanup_and_reset_dungeon_generator() -> void:
 	if is_currently_generating:
@@ -849,6 +866,9 @@ func setup_room_instances_and_validate_before_generate() -> bool:
 		#corridor_room_instance.dungeon_generator = self
 		corridor_room_instance.set("dungeon_generator", self)
 		#corridor_room_instance.ensure_doors_and_or_transform_cached_for_threads_and_virtualized_rooms()
+	_trap_room_fake_instance = trap_room_fake_scene.instantiate() if trap_room_fake_scene else null
+	if _trap_room_fake_instance:
+		_trap_room_fake_instance.set("dungeon_generator", self)
 	return validate_dungeon()
 
 ####################

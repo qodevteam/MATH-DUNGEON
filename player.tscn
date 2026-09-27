@@ -2307,6 +2307,9 @@ _data = {
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_37jol"]
 frequency = 0.0152
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_7ebel"]
+radius = 0.25
+
 [sub_resource type="Curve" id="Curve_b00hk"]
 _data = [Vector2(0, 0.49478292), 0.0, 0.0, 0, 0]
 point_count = 1
@@ -2575,7 +2578,6 @@ _data = {
 }
 
 [node name="Player" type="CharacterBody3D" unique_id=1461905877 node_paths=PackedStringArray("collision_shape", "crouch_animation_player", "camera_effects", "weapon_viewmodel")]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 floor_constant_speed = true
 safe_margin = 0.05
 script = ExtResource("1_pgbbb")
@@ -2612,7 +2614,7 @@ debug_color = Color(0, 0.85000014, 1, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.6555543, 0)
 
 [node name="gunshot" type="AudioStreamPlayer3D" parent="CameraGimbal" unique_id=1011460980]
-transform = Transform3D(-0.0040901927, 0, 0.99999166, 0, 1, 0, -0.99999166, 0, -0.0040901927, 0.023895264, 1.4407334, -1.0347532)
+transform = Transform3D(-0.0040901927, 0, 0.99999166, 0, 1, 0, -0.99999166, 0, -0.0040901927, 0.023895264, 0.08943701, -1.0347532)
 volume_db = 21.333
 unit_size = 83.63
 max_db = -2.77
@@ -2621,7 +2623,7 @@ pitch_scale = 1.94
 [node name="InnerGimbal" type="Node3D" parent="CameraGimbal" unique_id=581638949]
 
 [node name="Camera" type="Camera3D" parent="CameraGimbal/InnerGimbal" unique_id=1606354970]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8146973e-06, 1.6999999, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8146973e-06, 0.117195606, 0)
 doppler_tracking = 1
 current = true
 fov = 60.0
@@ -2675,7 +2677,7 @@ recoil_speed = 2.0
 camera_shake = NodePath("../Camera Shaker")
 
 [node name="BarrelOrigin" type="Marker3D" parent="CameraGimbal/InnerGimbal/Camera/player-shotgun-main" unique_id=402062695]
-transform = Transform3D(1, 0, 0, 0, 1.0000001, 0, 0, 0, 0.99999976, 0.023895266, 0, -5.4915795)
+transform = Transform3D(1, 0, 0, 0, 1.0000001, 0, 0, 0, 0.99999976, 0.023895267, 0, -3.4209304)
 
 [node name="player-shotgun" type="Node3D" parent="CameraGimbal/InnerGimbal/Camera/player-shotgun-main" unique_id=1393079477]
 transform = Transform3D(-0.9998194, -0.019005537, 4.220077e-18, 0, 2.220446e-16, 1, -0.019005537, 0.9998194, -2.220045e-16, 0.06103134, -0.24788213, 0.054164886)
@@ -3470,6 +3472,12 @@ noise = SubResource("FastNoiseLite_37jol")
 
 [node name="RayCast3D" type="RayCast3D" parent="CameraGimbal/InnerGimbal/Camera" unique_id=407197097]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+
+[node name="InteractShapeCast3D" type="ShapeCast3D" parent="CameraGimbal/InnerGimbal/Camera" unique_id=1065701295]
+shape = SubResource("SphereShape3D_7ebel")
+target_position = Vector3(0, 0, -2.235)
+max_results = 2
+collide_with_areas = true
 
 [node name="SprintTimer" type="Timer" parent="." unique_id=1909358331]
 wait_time = 0.222

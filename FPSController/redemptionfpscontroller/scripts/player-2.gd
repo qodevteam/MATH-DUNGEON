@@ -93,6 +93,8 @@ var _footstep_timer := 0.0
 
 var original_collision_height: float = 0.0
 var original_collision_position_y: float = 0.0
+var _interact_shape_cast: ShapeCast3D = null
+var _interaction_ui_visible := false
 
 const NORMAL_speed: int = 1
 var speed_modifier: float = NORMAL_speed
@@ -103,11 +105,12 @@ var _sprint_cooldown_remaining: float = 0.0
 var _pending_auto_reload: bool = false
 @onready var sprint_bar: Range = get_node_or_null(^"CanvasLayer/SprintBar2/SprintBar") as Range
 @onready var debug_panel: Label
+@onready var ui_animator: AnimationPlayer = get_node_or_null("CanvasLayer/AnimationPlayer UI")
 
 func _ready() -> void:
 	gimbal_h = get_node_or_null("CameraGimbal")                     as Node3D
 	gimbal_v = get_node_or_null("CameraGimbal/InnerGimbal")         as Node3D
-	camera   = get_node_or_null("CameraGimbal/InnerGimbal/Camera3D") as Camera3D
+	camera   = get_node_or_null("CameraGimbal/InnerGimbal/Camera") as Camera3D
 
 	if camera:
 		camera.current = true
@@ -136,6 +139,42 @@ func _ready() -> void:
 	_update_ammo_display()
 	_init_debug_panel()
 	_fix_skeleton_binding()
+	_setup_interaction()
+
+func _setup_interaction() -> void:
+	if camera:
+		var sphere = SphereShape3D.new()
+		sphere.radius = 0.25
+		_interact_shape_cast = ShapeCast3D.new()
+		_interact_shape_cast.shape = sphere
+		_interact_shape_cast.target_position = Vector3(0, 0, -2.0)
+		_interact_shape_cast.collide_with_areas = true
+		_interact_shape_cast.collide_with_bodies = false
+		_interact_shape_cast.max_results = 4
+		camera.add_child(_interact_shape_cast)
+
+func _handle_interaction() -> bool:
+	if not _interact_shape_cast or not camera:
+		return false
+	for i in range(_interact_shape_cast.get_collision_count()):
+		var collider = _interact_shape_cast.get_collider(i)
+		if collider and collider.has_node("InteractableComponent"):
+			var comp = collider.get_node("InteractableComponent")
+			if comp.has_method("interact_with") and Input.is_action_just_pressed("interact"):
+				comp.interact_with(self)
+			return true
+	return false
+
+func _update_interaction_ui(near: bool) -> void:
+	if _interaction_ui_visible == near:
+		return
+	_interaction_ui_visible = near
+	if not ui_animator:
+		return
+	if near:
+		ui_animator.play("interaction visible")
+	else:
+		ui_animator.play("interaction hide")
 
 func _fix_skeleton_binding() -> void:
 	await get_tree().process_frame
@@ -318,6 +357,8 @@ func _process(delta: float) -> void:
 			_finish_drift_to_crouch()
 
 	_update_debug_panel()
+	var near_interactable = _handle_interaction()
+	_update_interaction_ui(near_interactable)
 
 # ═══════════════════════════════════════════════════════════════════════════
 # STATE MACHINE
