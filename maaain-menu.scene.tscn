@@ -1,0 +1,289 @@
+[gd_scene format=3 uid="uid://hevin4ura7ir"]
+
+[ext_resource type="Script" uid="uid://bpnr8wc0amn24" path="res://MainMenu.gd" id="1_q1dmi"]
+[ext_resource type="FontFile" uid="uid://dnbmurc5icji" path="res://fonts/Hatch.ttf" id="2_font"]
+[ext_resource type="FontFile" uid="uid://b1uxvpooxhyh3" path="res://fonts/pixter-granular.ttf" id="3_lfdf6"]
+[ext_resource type="FontFile" uid="uid://dcta4gd5tavo8" path="res://fonts/HomeVideo-Regular.ttf" id="4_ptv21"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ptv21"]
+bg_color = Color(0.09803922, 0.09803922, 0.09803922, 1)
+border_width_left = 10
+border_width_top = 1
+border_width_right = 10
+border_width_bottom = 1
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rk41m"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.09803922, 0.09803922, 0.09803922, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_42lul"]
+content_margin_top = 5.0
+bg_color = Color(0.09803922, 0.09803922, 0.09803922, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_14fuf"]
+content_margin_left = 23.0
+content_margin_top = 5.0
+content_margin_right = 23.0
+bg_color = Color(0, 0, 0, 1)
+
+[node name="MainMenu" type="Control" unique_id=568490887]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_q1dmi")
+main_scene_path = "res://DungeonTest.tscn"
+
+[node name="Background" type="ColorRect" parent="." unique_id=732858968]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Vignette" type="ColorRect" parent="." unique_id=1407725857]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.3)
+
+[node name="TitleLabel" type="Label" parent="." unique_id=1971005498]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_top = 80.0
+offset_right = 300.0
+offset_bottom = 160.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.88, 0.95000005, 1, 1)
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 3
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 56
+text = "MATH DUNGEON"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SubTitle" type="Label" parent="." unique_id=509669167]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 165.0
+offset_right = 200.0
+offset_bottom = 195.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.75, 1)
+theme_override_font_sizes/font_size = 18
+text = "WELCOME"
+horizontal_alignment = 1
+
+[node name="MenuButtons" type="VBoxContainer" parent="." unique_id=1839871160]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 40.0
+offset_top = -65.0
+offset_right = 320.0
+offset_bottom = 145.0
+grow_vertical = 2
+theme_override_constants/separation = 16
+
+[node name="PlayButton" type="Button" parent="MenuButtons" unique_id=1642695453]
+custom_minimum_size = Vector2(280, 54)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_lfdf6")
+theme_override_font_sizes/font_size = 36
+text = "PLAY GAME"
+flat = true
+alignment = 0
+
+[node name="SettingsButton" type="Button" parent="MenuButtons" unique_id=2142446271]
+custom_minimum_size = Vector2(280, 54)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_lfdf6")
+theme_override_font_sizes/font_size = 36
+text = "SETTINGS"
+flat = true
+alignment = 0
+
+[node name="QuitButton" type="Button" parent="MenuButtons" unique_id=962894250]
+custom_minimum_size = Vector2(280, 54)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_lfdf6")
+theme_override_font_sizes/font_size = 36
+text = "QUIT"
+flat = true
+alignment = 0
+
+[node name="SettingsPanel" type="Panel" parent="." unique_id=187487162]
+visible = false
+custom_minimum_size = Vector2(560, 420)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -210.0
+offset_right = 280.0
+offset_bottom = 210.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ptv21")
+
+[node name="SettingsTabContainer" type="TabContainer" parent="SettingsPanel" unique_id=1531467482]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/side_margin = 3
+theme_override_constants/tab_separation = 3
+theme_override_constants/icon_separation = 5
+theme_override_constants/icon_max_width = 14
+theme_override_fonts/font = ExtResource("4_ptv21")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/panel = SubResource("StyleBoxFlat_rk41m")
+theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_42lul")
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_14fuf")
+current_tab = 0
+
+[node name="VideoTab" type="VBoxContainer" parent="SettingsPanel/SettingsTabContainer" unique_id=1681355384]
+layout_mode = 2
+theme_override_constants/separation = 14
+metadata/_tab_index = 0
+
+[node name="FullscreenButton" type="Button" parent="SettingsPanel/SettingsTabContainer/VideoTab" unique_id=79075994]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_ptv21")
+theme_override_font_sizes/font_size = 26
+text = "Fullscreen: OFF"
+
+[node name="ResolutionOption" type="OptionButton" parent="SettingsPanel/SettingsTabContainer/VideoTab" unique_id=1430611547]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_ptv21")
+theme_override_font_sizes/font_size = 26
+selected = 0
+item_count = 6
+popup/item_0/text = "1920*1080"
+popup/item_0/id = 0
+popup/item_1/id = 1
+popup/item_2/id = 2
+popup/item_3/id = 3
+popup/item_4/id = 4
+popup/item_5/id = 5
+
+[node name="VSyncButton" type="Button" parent="SettingsPanel/SettingsTabContainer/VideoTab" unique_id=581928657]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_ptv21")
+theme_override_font_sizes/font_size = 26
+text = "V-Sync: ON"
+
+[node name="QualityOption" type="OptionButton" parent="SettingsPanel/SettingsTabContainer/VideoTab" unique_id=1453327956]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_ptv21")
+theme_override_font_sizes/font_size = 26
+selected = 0
+item_count = 3
+popup/item_0/text = "QUALITY LOW"
+popup/item_0/id = 0
+popup/item_1/text = "QUALITY MEDIUM"
+popup/item_1/id = 1
+popup/item_2/text = "QUALITY HIGH"
+popup/item_2/id = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="SettingsPanel/SettingsTabContainer/VideoTab" unique_id=1240534634]
+layout_mode = 2
+theme_override_constants/margin_top = 100
+
+[node name="VideoBackButton" type="Button" parent="SettingsPanel/SettingsTabContainer/VideoTab/MarginContainer" unique_id=1331987302]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_ptv21")
+theme_override_font_sizes/font_size = 26
+text = "Back to Menu"
+
+[node name="AudioTab" type="VBoxContainer" parent="SettingsPanel/SettingsTabContainer" unique_id=330424113]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 10
+metadata/_tab_index = 1
+
+[node name="MasterVolumeLabel" type="Label" parent="SettingsPanel/SettingsTabContainer/AudioTab" unique_id=280571322]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_ptv21")
+theme_override_font_sizes/font_size = 26
+text = "Master: 100%"
+
+[node name="MasterVolume" type="HSlider" parent="SettingsPanel/SettingsTabContainer/AudioTab" unique_id=1456239472]
+layout_mode = 2
+value = 100.0
+
+[node name="MusicVolumeLabel" type="Label" parent="SettingsPanel/SettingsTabContainer/AudioTab" unique_id=947225616]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_ptv21")
+theme_override_font_sizes/font_size = 26
+text = "Music: 100%"
+
+[node name="MusicVolume" type="HSlider" parent="SettingsPanel/SettingsTabContainer/AudioTab" unique_id=607963472]
+layout_mode = 2
+value = 100.0
+
+[node name="SFXVolumeLabel" type="Label" parent="SettingsPanel/SettingsTabContainer/AudioTab" unique_id=287436825]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_ptv21")
+theme_override_font_sizes/font_size = 26
+text = "SFX: 100%"
+
+[node name="SFXVolume" type="HSlider" parent="SettingsPanel/SettingsTabContainer/AudioTab" unique_id=1405522177]
+layout_mode = 2
+value = 100.0
+
+[node name="MuteButton" type="Button" parent="SettingsPanel/SettingsTabContainer/AudioTab" unique_id=628491048]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_ptv21")
+theme_override_font_sizes/font_size = 26
+text = "Mute: OFF"
+
+[node name="MarginContainer" type="MarginContainer" parent="SettingsPanel/SettingsTabContainer/AudioTab" unique_id=1827834660]
+layout_mode = 2
+theme_override_constants/margin_top = 100
+
+[node name="AudioBackButton" type="Button" parent="SettingsPanel/SettingsTabContainer/AudioTab/MarginContainer" unique_id=54676358]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_ptv21")
+theme_override_font_sizes/font_size = 26
+text = "Back to Menu"

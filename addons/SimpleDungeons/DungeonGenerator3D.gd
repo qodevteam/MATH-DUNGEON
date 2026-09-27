@@ -303,27 +303,29 @@ func abort_generation():
 		rooms_container.get_parent().remove_child(rooms_container)
 
 func _finalize_rooms(ready_callback = null) -> void:
-	if not rooms_container.is_inside_tree():
-		add_child(rooms_container)
-	rooms_container.owner = self.owner
-	for room in _rooms_placed.slice(0):
-		_rooms_placed.erase(room)
-		var unvirtualized = room.unvirtualize_and_free_clone_if_needed(rooms_container)
-		unvirtualized.owner = self.owner
-		_rooms_placed.push_back(unvirtualized)
-	for room in room_instances:
-		if room and is_instance_valid(room):
-			room.queue_free()
-	room_instances = []
-	if corridor_room_instance and is_instance_valid(corridor_room_instance):
-		corridor_room_instance.queue_free()
-	corridor_room_instance = null
-	if ready_callback is Callable:
-		if rooms_container.is_node_ready():
-			ready_callback.call_deferred()
-		else:
-			rooms_container.ready.connect(ready_callback)
-		
+		if not rooms_container.is_inside_tree():
+			add_child(rooms_container)
+		rooms_container.owner = self.owner
+		for room in _rooms_placed.slice(0):
+			_rooms_placed.erase(room)
+			var unvirtualized = room.unvirtualize_and_free_clone_if_needed(rooms_container)
+			unvirtualized.owner = self.owner
+			_rooms_placed.push_back(unvirtualized)
+			if unvirtualized.has_method("make_local_to_scene"):
+				unvirtualized.make_local_to_scene()
+		for room in room_instances:
+			if room and is_instance_valid(room):
+				room.queue_free()
+		room_instances = []
+		if corridor_room_instance and is_instance_valid(corridor_room_instance):
+			corridor_room_instance.queue_free()
+		corridor_room_instance = null
+		if ready_callback is Callable:
+			if rooms_container.is_node_ready():
+				ready_callback.call_deferred()
+			else:
+				rooms_container.ready.connect(ready_callback)
+
 
 func _dungeon_finished_generating() -> void:
 	_finalize_rooms(_emit_done_signals)

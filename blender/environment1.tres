@@ -1,0 +1,25 @@
+[gd_resource type="Environment" format=3 uid="uid://cpkhqcisqkqju"]
+
+[ext_resource type="Texture2D" uid="uid://bep84svugmivc" path="res://blender/final lens dirt.png" id="1_1hqr4"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fs5xr"]
+
+[sub_resource type="Sky" id="Sky_oefs8"]
+sky_material = SubResource("ProceduralSkyMaterial_fs5xr")
+
+[resource]
+background_mode = 2
+background_energy_multiplier = 0.28
+sky = SubResource("Sky_oefs8")
+glow_enabled = true
+glow_levels/4 = 1.0
+glow_levels/5 = 1.0
+glow_normalized = true
+glow_intensity = 3.71
+glow_strength = 0.8
+glow_bloom = 0.35
+glow_blend_mode = 0
+glow_map_strength = 1.0
+glow_map = ExtResource("1_1hqr4")
+adjustment_brightness = 1.55
+adjustment_contrast = 0.85
