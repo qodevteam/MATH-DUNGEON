@@ -152,6 +152,7 @@ flat = true
 alignment = 0
 
 [node name="SettingsPanel" type="Panel" parent="." unique_id=187487162]
+visible = false
 custom_minimum_size = Vector2(560, 420)
 layout_mode = 1
 anchors_preset = 8

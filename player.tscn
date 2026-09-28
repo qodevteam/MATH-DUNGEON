@@ -3754,4 +3754,13 @@ metadata/_edit_use_anchors_ = true
 shape = SubResource("BoxShape3D_pgbbb")
 debug_color = Color(0, 16.198252, 18.892157, 1)
 
+[node name="HIT OVERLAY" type="ColorRect" parent="." unique_id=1820893078]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0)
+
 [connection signal="timeout" from="CanvasLayer/HitSight/HitSightTimer" to="CanvasLayer" method="_on_hit_sight_timer_timeout"]

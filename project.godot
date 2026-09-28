@@ -25,6 +25,8 @@ bus_2/name="SFX"
 [autoload]
 
 GlobalVariables="*res://FPSController/redemptionfpscontroller/scripts/GlobalVariables.gd"
+GraphicsSettings="*res://GraphicsSettings.gd"
+PauseController="*res://PauseController.gd"
 _mcp_game_helper="*res://addons/godot_ai/runtime/game_helper.gd"
 
 [display]

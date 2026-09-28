@@ -22,6 +22,8 @@ var music_volume_slider: HSlider
 var music_volume_label: Label
 var sfx_volume_slider: HSlider
 var sfx_volume_label: Label
+var render_distance_slider: HSlider
+var render_distance_label: Label
 var mute_button: Button
 
 var resolutions: Array[Vector2i] = [
@@ -55,6 +57,13 @@ func init_nodes() -> void:
 	sfx_volume_slider = get_node_or_null("SettingsPanel/SettingsTabContainer/AudioTab/SFXVolume") as HSlider
 	sfx_volume_label = get_node_or_null("SettingsPanel/SettingsTabContainer/AudioTab/SFXVolumeLabel") as Label
 	mute_button = get_node_or_null("SettingsPanel/SettingsTabContainer/AudioTab/MuteButton") as Button
+	var rd_setting = get_node_or_null("SettingsPanel/SettingsTabContainer/VideoTab/MarginContainer2/Rendering Distance Setting")
+	if rd_setting:
+		for child in rd_setting.get_children():
+			if child is HSlider:
+				render_distance_slider = child as HSlider
+			elif child is Label and child.name == "distance label":
+				render_distance_label = child as Label
 	
 	setup_audio_buses()
 	_populate_options()
@@ -75,6 +84,8 @@ func init_nodes() -> void:
 		music_volume_slider.value_changed.connect(_on_music_volume_changed)
 	if sfx_volume_slider:
 		sfx_volume_slider.value_changed.connect(_on_sfx_volume_changed)
+	if render_distance_slider:
+		render_distance_slider.value_changed.connect(_on_render_distance_changed)
 	if mute_button:
 		mute_button.pressed.connect(_on_mute_toggled)
 	var play_btn = get_node_or_null("PlayButton")
@@ -220,6 +231,11 @@ func _on_sfx_volume_changed(value: float) -> void:
 		AudioServer.set_bus_volume_db(2, db)
 	settings_manager.save_sfx_volume(value)
 
+func _on_render_distance_changed(value: float) -> void:
+	if render_distance_label:
+		render_distance_label.text = str(int(value)) + " METERS"
+	settings_manager.save_render_distance(value)
+
 func _on_mute_toggled() -> void:
 	is_muted = not is_muted
 	if mute_button:
@@ -250,6 +266,10 @@ func _load_video_settings() -> void:
 	current_quality = settings_manager.quality_level
 	quality_option.select(current_quality)
 	apply_quality_settings(current_quality)
+	if render_distance_slider:
+		render_distance_slider.set_value_no_signal(settings_manager.render_distance)
+	if render_distance_label:
+		render_distance_label.text = str(int(settings_manager.render_distance)) + " METERS"
 
 func _load_audio_settings() -> void:
 	master_volume_slider.value = settings_manager.master_volume
@@ -289,6 +309,7 @@ func apply_quality_settings(level: int) -> void:
 			DisplayServer.window_set_size(Vector2i(800, 600))
 		_:
 			pass
+	settings_manager.apply_quality(get_tree().current_scene, level)
 
 func _apply_volume_from_settings() -> void:
 	if AudioServer.get_bus_count() > 0:

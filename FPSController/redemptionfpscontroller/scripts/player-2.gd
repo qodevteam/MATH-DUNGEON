@@ -119,6 +119,8 @@ var _pending_auto_reload: bool = false
 @onready var sprint_bar: Range = get_node_or_null(^"CanvasLayer/SprintBar2/SprintBar") as Range
 @onready var debug_panel: Label
 @onready var ui_animator: AnimationPlayer = get_node_or_null("CanvasLayer/AnimationPlayer UI")
+@onready var hit_overlay: ColorRect = get_node_or_null("HIT OVERLAY COLOR RECT") as ColorRect
+var _hit_tween: Tween = null
 
 func _ready() -> void:
 	current_health = max_health
@@ -709,10 +711,21 @@ func take_damage(amount: float, damage_origin: Vector3 = Vector3.ZERO) -> void:
 		return
 	current_health = maxf(current_health - amount, 0.0)
 	health_changed.emit(current_health, max_health)
+	_flash_hit_overlay()
 	if camera_effects and camera_effects.has_method("trigger_damage_kick"):
 		camera_effects.trigger_damage_kick(damage_origin)
 	if current_health <= 0.0:
 		die()
+
+
+func _flash_hit_overlay() -> void:
+	if hit_overlay == null:
+		return
+	if _hit_tween and _hit_tween.is_valid():
+		_hit_tween.kill()
+	hit_overlay.modulate.a = 0.55
+	_hit_tween = create_tween()
+	_hit_tween.tween_property(hit_overlay, "modulate:a", 0.0, 0.3).set_ease(Tween.EASE_OUT)
 
 
 func heal(amount: float) -> void:

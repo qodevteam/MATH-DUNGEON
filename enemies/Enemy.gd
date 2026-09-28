@@ -56,6 +56,7 @@ var _attack_anim_length := 1.4333
 var _death_anim_length := 2.4
 var _noise_pos := Vector3.ZERO
 var _has_noise := false
+var _exclude_rids: Array[RID] = []
 
 
 func _ready() -> void:
@@ -76,6 +77,7 @@ func _ready() -> void:
 		if _anim_player.has_animation("Death"):
 			_death_anim_length = _anim_player.get_animation("Death").length
 	_meshes = _collect_meshes(self)
+	_exclude_rids = _collect_own_rids(self)
 	_flash_mat = StandardMaterial3D.new()
 	_flash_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	_flash_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
@@ -151,6 +153,15 @@ func _collect_meshes(node: Node) -> Array[MeshInstance3D]:
 		out.append(node)
 	for child in node.get_children():
 		out.append_array(_collect_meshes(child))
+	return out
+
+
+func _collect_own_rids(node: Node) -> Array[RID]:
+	var out: Array[RID] = []
+	if node is CollisionObject3D:
+		out.append((node as CollisionObject3D).get_rid())
+	for child in node.get_children():
+		out.append_array(_collect_own_rids(child))
 	return out
 
 
@@ -301,9 +312,7 @@ func _has_line_of_sight() -> bool:
 		return false
 	var space := get_world_3d().direct_space_state
 	var from := _shape.global_position if _shape else global_position + Vector3.UP * 1.5
-	var exclude: Array[RID] = [get_rid()]
-	for node in find_children("*", "CollisionObject3D", true, false):
-		exclude.append((node as CollisionObject3D).get_rid())
+	var exclude: Array[RID] = _exclude_rids.duplicate()
 	var query := PhysicsRayQueryParameters3D.create(from, _player_aim_point(), collision_mask, exclude)
 	var hit := space.intersect_ray(query)
 	if hit.is_empty():
