@@ -6,37 +6,76 @@ signal door_unlocked
 
 @export var difficulty: int = 1
 @export var question_duration: float = 15.0
-@export var animation_player: AnimationPlayer
+@export var area_3d: Area3D
 @export var interactable: InteractableComponent
+@export var animation_player: AnimationPlayer
 @export var collision_shape: CollisionShape3D
 @export var door_mesh: Node3D
+@export var player: CharacterBody3D
+@export var static_collision_shape: CollisionShape3D
 
 var _math_ui: Control = null
+var _area: Area3D = null
+var _interactable: InteractableComponent = null
 
 func _ready() -> void:
-	var area := get_node_or_null("Area3D") as Area3D
-	if not area:
-		for child in get_children():
-			if child is Area3D:
-				area = child
-				break
+	_area = area_3d if area_3d else _find_area3d()
+	if not _area:
+		push_error("MathDoor: No Area3D found in MathDoor")
+		return
 
-	if area:
-		var area_comp := area.get_node_or_null("InteractableComponent") as InteractableComponent
-		if not area_comp:
-			print("MathDoor: Adding InteractableComponent to %s" % area.get_path())
-			area_comp = InteractableComponent.new()
-			area_comp.name = "InteractableComponent"
-			area.add_child(area_comp)
+	_interactable = _area.get_node_or_null("InteractableComponent") as InteractableComponent
+	if not _interactable:
+		print("MathDoor: Adding InteractableComponent to %s" % _area.get_path())
+		_interactable = InteractableComponent.new()
+		_interactable.name = "InteractableComponent"
+		_area.add_child(_interactable)
 
-		area_comp.interacted.connect(_on_interacted)
-		print("MathDoor: Connected to Area3D InteractableComponent at %s" % area_comp.get_path())
-	else:
-		push_error("MathDoor: No Area3D found in DoorInteractable")
+	if not _interactable.interacted.is_connected(_on_interacted):
+		_interactable.interacted.connect(_on_interacted)
+		print("MathDoor: Connected to Area3D InteractableComponent at %s" % _interactable.get_path())
 
-	if interactable and interactable != area.get_node_or_null("InteractableComponent"):
-		interactable.interacted.connect(_on_interacted)
+	if interactable and interactable != _interactable:
+		if not interactable.interacted.is_connected(_on_interacted):
+			interactable.interacted.connect(_on_interacted)
 		print("MathDoor: Also connected to exported InteractableComponent at %s" % interactable.get_path())
+
+func _find_area3d() -> Area3D:
+	for child in get_children():
+		if child is Area3D:
+			return child
+		var found := _find_area3d_recursive(child)
+		if found:
+			return found
+	return null
+
+func _find_area3d_recursive(node: Node) -> Area3D:
+	for child in node.get_children():
+		if child is Area3D:
+			return child
+		var found := _find_area3d_recursive(child)
+		if found:
+			return found
+	return null
+
+func _find_player() -> CharacterBody3D:
+	var root := get_tree().root
+	for child in root.get_children():
+		if child is CharacterBody3D and child.name.to_lower().find("player") != -1:
+			return child
+		var found := _find_player_recursive(child)
+		if found:
+			return found
+	return null
+
+func _find_player_recursive(node: Node) -> CharacterBody3D:
+	if node is CharacterBody3D and node.name.to_lower().find("player") != -1:
+		return node
+	for child in node.get_children():
+		var found := _find_player_recursive(child)
+		if found:
+			return found
+	return null
 
 func _on_interacted() -> void:
 	print("MathDoor: interacted signal received")
@@ -58,28 +97,9 @@ func _on_interacted() -> void:
 		_math_ui.door_unlocked.connect(_unlock)
 
 	var q = _math_ui.generate_question(difficulty)
-	var player = _find_player()
-	print("MathDoor: showing question '%s', player=%s" % [q.text, player.get_path() if player else "NONE"])
-	_math_ui.show_question(q.text, q.options, q.correct_index, self, player, difficulty)
-
-func _find_player() -> CharacterBody3D:
-	var root := get_tree().root
-	for child in root.get_children():
-		if child is CharacterBody3D and child.name.to_lower().find("player") != -1:
-			return child
-		var found := _find_player_recursive(child)
-		if found:
-			return found
-	return null
-
-func _find_player_recursive(node: Node) -> CharacterBody3D:
-	if node is CharacterBody3D and node.name.to_lower().find("player") != -1:
-		return node
-	for child in node.get_children():
-		var found := _find_player_recursive(child)
-		if found:
-			return found
-	return null
+	var resolved_player = player if player else _find_player()
+	print("MathDoor: showing question '%s', player=%s" % [q.text, resolved_player.get_path() if resolved_player else "NONE"])
+	_math_ui.show_question(q.text, q.options, q.correct_index, self, resolved_player, difficulty)
 
 func _unlock(_door_ref: Node) -> void:
 	door_unlocked.emit()
@@ -96,11 +116,8 @@ func _unlock(_door_ref: Node) -> void:
 		collision_shape.disabled = true
 		print("MathDoor: Disabled trigger collision at %s" % collision_shape.get_path())
 
-	var static_body := get_node_or_null("StaticBody3D") as StaticBody3D
-	if static_body:
-		var static_shape := static_body.get_node_or_null("CollisionShape3D") as CollisionShape3D
-		if static_shape:
-			static_shape.disabled = true
-			print("MathDoor: Disabled static collision at %s" % static_shape.get_path())
+	if static_collision_shape:
+		static_collision_shape.disabled = true
+		print("MathDoor: Disabled static collision at %s" % static_collision_shape.get_path())
 
 	print("✅ Door collision disabled")

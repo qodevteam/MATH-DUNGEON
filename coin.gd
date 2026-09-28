@@ -5,16 +5,14 @@ signal collected(value: int)
 
 @export var coin_value: int = 1
 @export var collection_radius: float = 1.2
+@export var mesh: MeshInstance3D
+@export var anim: AnimationPlayer
 
 var _collected: bool = false
 var _area: Area3D
 var _particles: GPUParticles3D
-var _mesh: MeshInstance3D
-var _anim: AnimationPlayer
 
 func _ready() -> void:
-	_mesh = get_node_or_null("Coin_MESH") as MeshInstance3D
-	_anim = get_node_or_null("Coin_MESH/AnimationPlayer") as AnimationPlayer
 	_setup_collection_area()
 	_setup_particles()
 
@@ -79,10 +77,10 @@ func _collect(player: CharacterBody3D) -> void:
 	collected.emit(coin_value)
 	print("Coin collected! +%d" % coin_value)
 
-	if _anim and _anim.has_animation("COIN FLIP"):
-		_anim.stop()
-	if _mesh:
-		_mesh.visible = false
+	if anim and anim.has_animation("COIN FLIP"):
+		anim.stop()
+	if mesh:
+		mesh.visible = false
 
 	if _particles:
 		_particles.emitting = true

@@ -10,7 +10,7 @@ content_margin_right = 50.0
 content_margin_bottom = 50.0
 bg_color = Color(0.02, 0.02, 0.02, 1)
 
-[node name="MathUIEquationDisplayer" type="Control" unique_id=987654321]
+[node name="MathUIEquationDisplayer" type="Control" unique_id=987654321 node_paths=PackedStringArray("overlay", "panel", "title_label", "subtitle_label", "question_label", "option_buttons", "timer_bar", "skip_button")]
 z_index = 100
 layout_mode = 3
 anchors_preset = 15
@@ -20,6 +20,14 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_s")
 timer_duration = 30.0
+overlay = NodePath("CanvasLayer/Overlay")
+panel = NodePath("CanvasLayer/Panel")
+title_label = NodePath("CanvasLayer/Panel/VBox/TitleLabel")
+subtitle_label = NodePath("CanvasLayer/Panel/VBox/SubtitleLabel")
+question_label = NodePath("CanvasLayer/Panel/VBox/QuestionLabel")
+option_buttons = [NodePath("CanvasLayer/Panel/VBox/OptionGrid/OptionButton1"), NodePath("CanvasLayer/Panel/VBox/OptionGrid/OptionButton2"), NodePath("CanvasLayer/Panel/VBox/OptionGrid/OptionButton3"), NodePath("CanvasLayer/Panel/VBox/OptionGrid/OptionButton4")]
+timer_bar = NodePath("CanvasLayer/Panel/VBox/TimerBar")
+skip_button = NodePath("CanvasLayer/Panel/VBox/SkipButton")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=100000014]
 layer = 2
