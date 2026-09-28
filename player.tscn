@@ -2576,7 +2576,7 @@ _data = {
 &"interaction visible": SubResource("Animation_kslcm")
 }
 
-[node name="Player" type="CharacterBody3D" unique_id=1461905877 node_paths=PackedStringArray("collision_shape", "crouch_animation_player", "camera_effects", "weapon_viewmodel")]
+[node name="Player" type="CharacterBody3D" unique_id=1461905877 node_paths=PackedStringArray("collision_shape", "crouch_animation_player", "camera_effects", "weapon_viewmodel") groups=["player"]]
 floor_constant_speed = true
 safe_margin = 0.05
 script = ExtResource("1_pgbbb")

@@ -1013,6 +1013,10 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_07s3m")
 
+[sub_resource type="NavigationMesh" id="NavigationMesh_pgbbb"]
+sample_partition_type = 1
+geometry_parsed_geometry_type = 0
+
 [node name="LivingRoom" type="Node3D" unique_id=125645300]
 script = ExtResource("1_y5hb7")
 size_in_voxels = Vector3i(3, 1, 2)
@@ -1810,6 +1814,10 @@ shape = SubResource("BoxShape3D_1qoo3")
 [node name="barrel" type="MeshInstance3D" parent="Models/Decorations/RigidBody3D" unique_id=1657777032]
 mesh = SubResource("ArrayMesh_7n2s3")
 
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=620022531]
+transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0, -4.999999)
+navigation_mesh = SubResource("NavigationMesh_pgbbb")
+
 [node name="Player" parent="." unique_id=1461905877 instance=ExtResource("5_704si")]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 10.115156, 0, 4.104734)
 
@@ -1817,6 +1825,6 @@ transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 10.115156, 0, 4.104734)
 shadow_bias = 0.05
 
 [node name="enemy" parent="." unique_id=441373270 instance=ExtResource("6_03md2")]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, -1.8288743, 4.8112926)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -4.4788246, 4.8112926)
 
 [editable path="Player"]
