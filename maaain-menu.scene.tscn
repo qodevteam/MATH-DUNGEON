@@ -250,7 +250,7 @@ custom_minimum_size = Vector2(0, 48.56)
 custom_maximum_size = Vector2(-1, 55.58)
 layout_mode = 2
 
-[node name="SFXVolume" type="HSlider" parent="SettingsPanel/SettingsTabContainer/VideoTab/MarginContainer2/Rendering Distance Setting" unique_id=199997686]
+[node name="RenderingDistance" type="HSlider" parent="SettingsPanel/SettingsTabContainer/VideoTab/MarginContainer2/Rendering Distance Setting" unique_id=199997686]
 layout_mode = 0
 offset_top = 27.0
 offset_right = 512.0
