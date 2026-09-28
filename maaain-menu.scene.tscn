@@ -33,6 +33,21 @@ content_margin_top = 5.0
 content_margin_right = 23.0
 bg_color = Color(0, 0, 0, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_72ljs"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_blend = true
+corner_radius_top_right = 10
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_lh2x4"]
+thickness = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jyln3"]
+bg_color = Color(1, 1, 1, 1)
+
 [node name="MainMenu" type="Control" unique_id=568490887]
 layout_mode = 3
 anchors_preset = 15
@@ -137,7 +152,6 @@ flat = true
 alignment = 0
 
 [node name="SettingsPanel" type="Panel" parent="." unique_id=187487162]
-visible = false
 custom_minimum_size = Vector2(560, 420)
 layout_mode = 1
 anchors_preset = 8
@@ -185,6 +199,7 @@ custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("4_ptv21")
 theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxFlat_72ljs")
 text = "Fullscreen: OFF"
 
 [node name="ResolutionOption" type="OptionButton" parent="SettingsPanel/SettingsTabContainer/VideoTab" unique_id=1430611547]
@@ -192,6 +207,7 @@ custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("4_ptv21")
 theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxFlat_72ljs")
 selected = 0
 item_count = 6
 popup/item_0/text = "1920*1080"
@@ -207,6 +223,7 @@ custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("4_ptv21")
 theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxFlat_72ljs")
 text = "V-Sync: ON"
 
 [node name="QualityOption" type="OptionButton" parent="SettingsPanel/SettingsTabContainer/VideoTab" unique_id=1453327956]
@@ -214,6 +231,7 @@ custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("4_ptv21")
 theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxFlat_72ljs")
 selected = 0
 item_count = 3
 popup/item_0/text = "QUALITY LOW"
@@ -223,15 +241,56 @@ popup/item_1/id = 1
 popup/item_2/text = "QUALITY HIGH"
 popup/item_2/id = 2
 
+[node name="MarginContainer2" type="MarginContainer" parent="SettingsPanel/SettingsTabContainer/VideoTab" unique_id=2116533625]
+layout_mode = 2
+theme_override_constants/margin_top = 12
+
+[node name="Rendering Distance Setting" type="Control" parent="SettingsPanel/SettingsTabContainer/VideoTab/MarginContainer2" unique_id=780957294]
+custom_minimum_size = Vector2(0, 48.56)
+custom_maximum_size = Vector2(-1, 55.58)
+layout_mode = 2
+
+[node name="SFXVolume" type="HSlider" parent="SettingsPanel/SettingsTabContainer/VideoTab/MarginContainer2/Rendering Distance Setting" unique_id=199997686]
+layout_mode = 0
+offset_top = 27.0
+offset_right = 512.0
+offset_bottom = 43.0
+theme_override_styles/slider = SubResource("StyleBoxLine_lh2x4")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_jyln3")
+min_value = 100.0
+max_value = 1000.0
+value = 133.0
+
+[node name="Label" type="Label" parent="SettingsPanel/SettingsTabContainer/VideoTab/MarginContainer2/Rendering Distance Setting" unique_id=1068437272]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_fonts/font = ExtResource("4_ptv21")
+theme_override_font_sizes/font_size = 26
+text = "Rendering Distance"
+
+[node name="distance label" type="Label" parent="SettingsPanel/SettingsTabContainer/VideoTab/MarginContainer2/Rendering Distance Setting" unique_id=1126326113]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -171.0
+offset_bottom = 24.0
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("4_ptv21")
+theme_override_font_sizes/font_size = 26
+text = " 100 meters"
+
 [node name="MarginContainer" type="MarginContainer" parent="SettingsPanel/SettingsTabContainer/VideoTab" unique_id=1240534634]
 layout_mode = 2
-theme_override_constants/margin_top = 100
+theme_override_constants/margin_top = 25
 
 [node name="VideoBackButton" type="Button" parent="SettingsPanel/SettingsTabContainer/VideoTab/MarginContainer" unique_id=1331987302]
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("4_ptv21")
 theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxFlat_72ljs")
 text = "Back to Menu"
 
 [node name="AudioTab" type="VBoxContainer" parent="SettingsPanel/SettingsTabContainer" unique_id=330424113]
@@ -275,15 +334,17 @@ custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("4_ptv21")
 theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxFlat_72ljs")
 text = "Mute: OFF"
 
 [node name="MarginContainer" type="MarginContainer" parent="SettingsPanel/SettingsTabContainer/AudioTab" unique_id=1827834660]
 layout_mode = 2
-theme_override_constants/margin_top = 100
+theme_override_constants/margin_top = 93
 
 [node name="AudioBackButton" type="Button" parent="SettingsPanel/SettingsTabContainer/AudioTab/MarginContainer" unique_id=54676358]
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("4_ptv21")
 theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxFlat_72ljs")
 text = "Back to Menu"

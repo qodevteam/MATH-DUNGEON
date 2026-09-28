@@ -609,9 +609,6 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_t2ldh")
 
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_32lns"]
-load_path = "res://.godot/imported/FLASHLIGHT-COOKIE-Photoroom.png-d8ef91cfa4856a323c6dbd61fd606976.s3tc.ctex"
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_efodr"]
 resource_name = "remington"
 cull_mode = 2
@@ -2576,6 +2573,9 @@ _data = {
 &"interaction visible": SubResource("Animation_kslcm")
 }
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_pgbbb"]
+size = Vector3(100, 100, 100)
+
 [node name="Player" type="CharacterBody3D" unique_id=1461905877 node_paths=PackedStringArray("collision_shape", "crouch_animation_player", "camera_effects", "weapon_viewmodel") groups=["player"]]
 floor_constant_speed = true
 safe_margin = 0.05
@@ -3393,7 +3393,6 @@ mesh = SubResource("ArrayMesh_8b88a")
 transform = Transform3D(0.01666666, -1.83298e-09, -2.0372681e-09, 1.6292816e-09, 0.01666667, 4.2218744e-09, -1.4551915e-11, 9.094947e-13, 0.016666671, -1.9241124e-06, -0.0006244406, -0.005372029)
 light_energy = 6.153
 light_volumetric_fog_energy = 3.644
-light_projector = SubResource("CompressedTexture2D_32lns")
 light_specular = 0.0
 shadow_enabled = true
 shadow_blur = 3.246
@@ -3748,5 +3747,11 @@ theme_override_fonts/font = ExtResource("36_m6nxt")
 theme_override_font_sizes/font_size = 12
 text = "DEBUG PANEL"
 metadata/_edit_use_anchors_ = true
+
+[node name="Area Rendering Detection" type="Area3D" parent="." unique_id=588770940]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area Rendering Detection" unique_id=1213869410]
+shape = SubResource("BoxShape3D_pgbbb")
+debug_color = Color(0, 16.198252, 18.892157, 1)
 
 [connection signal="timeout" from="CanvasLayer/HitSight/HitSightTimer" to="CanvasLayer" method="_on_hit_sight_timer_timeout"]

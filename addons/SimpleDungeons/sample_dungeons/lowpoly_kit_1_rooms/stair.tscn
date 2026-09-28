@@ -758,3 +758,9 @@ visible = false
 
 [node name="enemy" parent="." unique_id=441373270 instance=ExtResource("6_pocjl")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -4.4788246, 0.9395733)
+
+[node name="enemy2" parent="." unique_id=2092173981 instance=ExtResource("6_pocjl")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 1.4846239, -2.1228871, -0.5427878)
+
+[node name="enemy3" parent="." unique_id=1589575176 instance=ExtResource("6_pocjl")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -4.298796, -5.017967, -0.5427878)

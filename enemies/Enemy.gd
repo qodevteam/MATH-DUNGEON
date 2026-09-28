@@ -56,7 +56,6 @@ var _attack_anim_length := 1.4333
 var _death_anim_length := 2.4
 var _noise_pos := Vector3.ZERO
 var _has_noise := false
-var _model_yaw_offset := 0.0
 
 
 func _ready() -> void:
@@ -88,35 +87,7 @@ func _ready() -> void:
 	_agent.height = 1.8
 	add_child(_agent)
 	_acquire_player()
-	_model_yaw_offset = _detect_model_yaw_offset()
 	_play_anim("Idle")
-
-
-func _detect_model_yaw_offset() -> float:
-	var skeleton: Skeleton3D = null
-	for node in find_children("*", "Skeleton3D", true, false):
-		if node is Skeleton3D:
-			skeleton = node
-			break
-	if skeleton == null:
-		return 0.0
-	var left := skeleton.find_bone("mixamorig_LeftUpLeg")
-	var right := skeleton.find_bone("mixamorig_RightUpLeg")
-	if left < 0 or right < 0:
-		return 0.0
-	var side: Vector3 = skeleton.get_bone_global_rest(left).origin - skeleton.get_bone_global_rest(right).origin
-	side.y = 0.0
-	if side.length_squared() < 0.000001:
-		return 0.0
-	var forward: Vector3 = side.cross(Vector3.UP)
-	if forward.length_squared() < 0.000001:
-		return 0.0
-	var in_root := global_transform.basis.inverse() * (skeleton.global_transform.basis * forward)
-	in_root.y = 0.0
-	if in_root.length_squared() < 0.000001:
-		return 0.0
-	in_root = in_root.normalized()
-	return atan2(in_root.x, in_root.z)
 
 
 func _resolve_playback() -> void:
@@ -443,7 +414,7 @@ func _face(dir: Vector3, delta: float) -> void:
 	dir.y = 0.0
 	if dir.length_squared() < 0.0001:
 		return
-	var target_yaw := atan2(dir.x, dir.z) - _model_yaw_offset
+	var target_yaw := atan2(dir.x, dir.z)
 	rotation.y = lerp_angle(rotation.y, target_yaw, clampf(turn_speed * delta, 0.0, 1.0))
 
 
