@@ -14,6 +14,18 @@ extends CharacterBody3D
 ## Enable or disable player movement.
 @export var moveAllowed: bool
 
+@export_category("Combat")
+## Maximum hit points.
+@export var max_health: float = 100.0
+## Damage dealt per pellet on a successful hitscan.
+@export var shotgun_damage: float = 15.0
+
+signal player_died
+signal health_changed(current: float, maximum: float)
+
+var current_health: float = 100.0
+var is_dead: bool = false
+
 @export_category("Sprint")
 ## Allow sprinting when enabled.
 @export var enable_sprint: bool = true
@@ -108,6 +120,9 @@ var _pending_auto_reload: bool = false
 @onready var ui_animator: AnimationPlayer = get_node_or_null("CanvasLayer/AnimationPlayer UI")
 
 func _ready() -> void:
+	current_health = max_health
+	health_changed.emit(current_health, max_health)
+
 	gimbal_h = get_node_or_null("CameraGimbal")                     as Node3D
 	gimbal_v = get_node_or_null("CameraGimbal/InnerGimbal")         as Node3D
 	camera   = get_node_or_null("CameraGimbal/InnerGimbal/Camera") as Camera3D
@@ -664,6 +679,8 @@ func _ready_sprint() -> void:
 
 
 func use_ammo() -> bool:
+	if is_dead:
+		return false
 	if current_ammo <= 0:
 		return false
 	if weapon_viewmodel and (weapon_viewmodel.reloading or weapon_viewmodel.shooting):
@@ -676,7 +693,58 @@ func use_ammo() -> bool:
 		weapon_viewmodel.play_shoot()
 		if current_ammo <= 0:
 			_pending_auto_reload = true
+	_hitscan_shot()
 	return true
+
+
+func take_damage(amount: float, damage_origin: Vector3 = Vector3.ZERO) -> void:
+	if is_dead:
+		return
+	current_health = maxf(current_health - amount, 0.0)
+	health_changed.emit(current_health, max_health)
+	if camera_effects and camera_effects.has_method("trigger_damage_kick"):
+		camera_effects.trigger_damage_kick(damage_origin)
+	if current_health <= 0.0:
+		die()
+
+
+func heal(amount: float) -> void:
+	if is_dead:
+		return
+	current_health = minf(current_health + amount, max_health)
+	health_changed.emit(current_health, max_health)
+
+
+func die() -> void:
+	if is_dead:
+		return
+	is_dead = true
+	current_health = 0.0
+	moveAllowed = false
+	lookAllowed = false
+	health_changed.emit(current_health, max_health)
+	player_died.emit()
+	await get_tree().create_timer(2.0).timeout
+	get_tree().reload_current_scene()
+
+
+func _hitscan_shot() -> void:
+	if not camera:
+		return
+	var space := get_world_3d().direct_space_state
+	var from := camera.global_position
+	var to := from - camera.global_transform.basis.z * 200.0
+	var query := PhysicsRayQueryParameters3D.create(from, to, collision_mask, [get_rid()])
+	query.collide_with_areas = false
+	var hit := space.intersect_ray(query)
+	if hit.is_empty():
+		return
+	var collider = hit.get("collider")
+	if collider == null:
+		return
+	var target: Node = collider as Node
+	if target and target.is_in_group("enemies") and target.has_method("take_damage"):
+		target.take_damage(shotgun_damage, from)
 
 
 func reload_ammo():
