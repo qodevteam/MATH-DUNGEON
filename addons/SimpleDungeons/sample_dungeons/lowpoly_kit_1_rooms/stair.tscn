@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bak8ltrhbmlv5" path="res://addons/SimpleDungeons/utils/CSGStairMaker3D.tscn" id="3_vbju8"]
 [ext_resource type="Script" uid="uid://c3e24hvhd16ub" path="res://FPSController/InteractableComponent.gd" id="4_pocjl"]
 [ext_resource type="PackedScene" uid="uid://btclseqyp8yfa" path="res://math_ui_equation_displayer.tscn" id="5_jvetc"]
+[ext_resource type="PackedScene" uid="uid://bo06is13ck0mn" path="res://enemy.tscn" id="6_pocjl"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_upkxj"]
 resource_name = "dark grey"
@@ -723,12 +724,12 @@ trail_lifetime = 10.0
 process_material = SubResource("ParticleProcessMaterial_cck1i")
 draw_pass_1 = SubResource("QuadMesh_sbycg")
 
-[node name="DoorInteractable" type="MeshInstance3D" parent="." unique_id=1093023825 node_paths=PackedStringArray("animation_player", "interactable", "collision_shape", "door_mesh")]
+[node name="DoorInteractable" type="MeshInstance3D" parent="." unique_id=1093023825 node_paths=PackedStringArray("interactable", "animation_player", "collision_shape", "door_mesh")]
 transform = Transform3D(-6.819327e-08, 0, 1.78278, 0, 1.7827799, 0, -1.5600802, 0, -7.7927794e-08, 9.843978, 2.3668616, 1.5883691)
 mesh = SubResource("ArrayMesh_ee73l")
 script = ExtResource("3_agjhe")
-animation_player = NodePath("door interact")
 interactable = NodePath("InteractableComponent")
+animation_player = NodePath("door interact")
 collision_shape = NodePath("Area3D/CollisionShape3D")
 door_mesh = NodePath(".")
 
@@ -754,3 +755,6 @@ metadata/_custom_type_script = "uid://c3e24hvhd16ub"
 
 [node name="MathUIEquationDisplayer" parent="." unique_id=987654321 instance=ExtResource("5_jvetc")]
 visible = false
+
+[node name="enemy" parent="." unique_id=441373270 instance=ExtResource("6_pocjl")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -4.4788246, 0.9395733)

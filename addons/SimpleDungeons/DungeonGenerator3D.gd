@@ -320,6 +320,7 @@ func _finalize_rooms(ready_callback = null) -> void:
 		if corridor_room_instance and is_instance_valid(corridor_room_instance):
 			corridor_room_instance.queue_free()
 		corridor_room_instance = null
+		_rebuild_quick_check_dicts()
 		if ready_callback is Callable:
 			if rooms_container.is_node_ready():
 				ready_callback.call_deferred()
@@ -868,12 +869,34 @@ func get_room_at_pos(grid_pos : Vector3i) -> DungeonRoom3D:
 	if stage > BuildStage.CONNECT_ROOMS:
 		 # Can use these vars for speedup if past the connect rooms stage where we set them
 		var quick_check = _quick_room_check_dict.get(grid_pos)
-		return quick_check if quick_check else _quick_corridors_check_dict.get(grid_pos)
+		if not is_instance_valid(quick_check):
+			quick_check = _quick_corridors_check_dict.get(grid_pos)
+		return quick_check if is_instance_valid(quick_check) else null
 	for room in get_all_placed_and_preplaced_rooms():
+		if not is_instance_valid(room):
+			continue
 		if room.get_grid_aabbi(false).contains_point(grid_pos):
 			return room
 	return null
-	
+
+# Rebuilds the quick lookup dicts from the live rooms. Necessary after
+# _finalize_rooms() because the virtual clones they referenced were freed.
+func _rebuild_quick_check_dicts() -> void:
+	_quick_room_check_dict = {}
+	_quick_corridors_check_dict = {}
+	var corridor_path : String = corridor_room_scene.resource_path if corridor_room_scene else ""
+	for room in get_all_placed_and_preplaced_rooms():
+		if not is_instance_valid(room):
+			continue
+		var is_corridor = corridor_path != "" and room.scene_file_path == corridor_path
+		var aabbi = room.get_grid_aabbi(false)
+		for x in aabbi.size.x: for y in aabbi.size.y: for z in aabbi.size.z:
+			var cell = aabbi.position + Vector3i(x,y,z)
+			if is_corridor:
+				_quick_corridors_check_dict[cell] = room
+			elif not _quick_room_check_dict.has(cell):
+				_quick_room_check_dict[cell] = room
+
 var _preplaced_rooms_cached : Array = []
 func get_preplaced_rooms() -> Array:
 	var rooms := []

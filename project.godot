@@ -43,8 +43,6 @@ enabled=PackedStringArray("res://addons/SceneBuilder/plugin.cfg", "res://addons/
 
 traproomfake=""
 traproomlegit=""
-enemies=""
-player=""
 
 [input]
 

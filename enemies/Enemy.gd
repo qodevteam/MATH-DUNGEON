@@ -4,6 +4,12 @@ signal enemy_died(enemy: Node)
 
 enum State { IDLE, CHASE, ATTACK, HURT, DEAD }
 
+const STATE_MACHINE_STATES: Array[StringName] = [
+	&"Idle", &"Walk", &"Run", &"Attack", &"Attack2", &"Attack3",
+	&"Attack Block", &"Impact Absorb", &"Death"
+]
+const COMBO_ANIMS: Array[StringName] = [&"Attack", &"Attack2", &"Attack3"]
+
 @export_category("Stats")
 @export var max_health: float = 100.0
 @export var move_speed: float = 3.5
@@ -45,10 +51,12 @@ var _rescan_timer := 0.0
 var _attack_cd := 0.0
 var _swing_time := -1.0
 var _swing_hit_done := false
+var _swing_index := 0
 var _attack_anim_length := 1.4333
 var _death_anim_length := 2.4
 var _noise_pos := Vector3.ZERO
 var _has_noise := false
+var _model_yaw_offset := 0.0
 
 
 func _ready() -> void:
@@ -64,8 +72,8 @@ func _ready() -> void:
 		_resolve_playback()
 		_fix_animation_setup()
 	if _anim_player:
-		if _anim_player.has_animation("Attack Block"):
-			_attack_anim_length = _anim_player.get_animation("Attack Block").length
+		if _anim_player.has_animation("Attack"):
+			_attack_anim_length = _anim_player.get_animation("Attack").length
 		if _anim_player.has_animation("Death"):
 			_death_anim_length = _anim_player.get_animation("Death").length
 	_meshes = _collect_meshes(self)
@@ -80,7 +88,35 @@ func _ready() -> void:
 	_agent.height = 1.8
 	add_child(_agent)
 	_acquire_player()
+	_model_yaw_offset = _detect_model_yaw_offset()
 	_play_anim("Idle")
+
+
+func _detect_model_yaw_offset() -> float:
+	var skeleton: Skeleton3D = null
+	for node in find_children("*", "Skeleton3D", true, false):
+		if node is Skeleton3D:
+			skeleton = node
+			break
+	if skeleton == null:
+		return 0.0
+	var left := skeleton.find_bone("mixamorig_LeftUpLeg")
+	var right := skeleton.find_bone("mixamorig_RightUpLeg")
+	if left < 0 or right < 0:
+		return 0.0
+	var side: Vector3 = skeleton.get_bone_global_rest(left).origin - skeleton.get_bone_global_rest(right).origin
+	side.y = 0.0
+	if side.length_squared() < 0.000001:
+		return 0.0
+	var forward: Vector3 = side.cross(Vector3.UP)
+	if forward.length_squared() < 0.000001:
+		return 0.0
+	var in_root := global_transform.basis.inverse() * (skeleton.global_transform.basis * forward)
+	in_root.y = 0.0
+	if in_root.length_squared() < 0.000001:
+		return 0.0
+	in_root = in_root.normalized()
+	return atan2(in_root.x, in_root.z)
 
 
 func _resolve_playback() -> void:
@@ -104,22 +140,38 @@ func _fix_animation_setup() -> void:
 	var sm := _anim_tree.tree_root as AnimationNodeStateMachine
 	if sm == null:
 		return
+	for i in range(sm.get_transition_count() - 1, -1, -1):
+		if not sm.has_node(sm.get_transition_from(i)) or not sm.has_node(sm.get_transition_to(i)):
+			sm.remove_transition_by_index(i)
 	for i in sm.get_transition_count():
 		var tr := sm.get_transition(i)
-		if tr.advance_mode == AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO and sm.get_transition_to(i) != &"Idle":
-			tr.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_ENABLED
+		var from := sm.get_transition_from(i)
+		if from == &"Start":
+			tr.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_AUTO
 			tr.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_IMMEDIATE
-	_ensure_transition(sm, &"Idle", &"Attack Block")
-	_ensure_transition(sm, &"Impact Absorb", &"Idle")
-	_ensure_transition(sm, &"Impact Absorb", &"Walk")
+			tr.xfade_time = 0.1
+			continue
+		tr.advance_mode = AnimationNodeStateMachineTransition.ADVANCE_MODE_ENABLED
+		tr.switch_mode = AnimationNodeStateMachineTransition.SWITCH_MODE_IMMEDIATE
+		tr.xfade_time = 0.1 if _is_combat_state(from) or _is_combat_state(sm.get_transition_to(i)) else 0.15
+	for from in STATE_MACHINE_STATES:
+		if from == &"Death":
+			continue
+		for to in STATE_MACHINE_STATES:
+			if to == from:
+				continue
+			if not sm.has_transition(from, to):
+				var tr := AnimationNodeStateMachineTransition.new()
+				tr.xfade_time = 0.12
+				sm.add_transition(from, to, tr)
+	for to in STATE_MACHINE_STATES:
+		if to != &"Death" and sm.has_transition(&"Death", to):
+			sm.remove_transition(&"Death", to)
+	sm.set_allow_transition_to_self(false)
 
 
-func _ensure_transition(sm: AnimationNodeStateMachine, from: StringName, to: StringName) -> void:
-	if sm.has_transition(from, to):
-		return
-	var tr := AnimationNodeStateMachineTransition.new()
-	tr.xfade_time = 0.2
-	sm.add_transition(from, to, tr)
+func _is_combat_state(state_name: StringName) -> bool:
+	return state_name != &"Idle" and state_name != &"Walk" and state_name != &"Run"
 
 
 func _collect_meshes(node: Node) -> Array[MeshInstance3D]:
@@ -248,7 +300,9 @@ func _detect_player() -> bool:
 func _player_dist() -> float:
 	if player == null:
 		return INF
-	return global_position.distance_to(player.global_position)
+	var dx := global_position.x - player.global_position.x
+	var dz := global_position.z - player.global_position.z
+	return sqrt(dx * dx + dz * dz)
 
 
 func _player_dead() -> bool:
@@ -275,19 +329,30 @@ func _has_line_of_sight() -> bool:
 	if player == null:
 		return false
 	var space := get_world_3d().direct_space_state
-	var from := _shape.global_position if _shape else global_position + Vector3.UP
-	var query := PhysicsRayQueryParameters3D.create(from, _player_aim_point(), collision_mask, [get_rid()])
+	var from := _shape.global_position if _shape else global_position + Vector3.UP * 1.5
+	var exclude: Array[RID] = [get_rid()]
+	for node in find_children("*", "CollisionObject3D", true, false):
+		exclude.append((node as CollisionObject3D).get_rid())
+	var query := PhysicsRayQueryParameters3D.create(from, _player_aim_point(), collision_mask, exclude)
 	var hit := space.intersect_ray(query)
 	if hit.is_empty():
 		return true
 	var collider := hit.get("collider") as Node
-	return collider == player or (collider != null and player.is_ancestor_of(collider))
+	if collider == null:
+		return true
+	if collider == player or player.is_ancestor_of(collider) or is_ancestor_of(collider):
+		return true
+	return collider.is_in_group("enemies")
 
 
 func _start_swing() -> void:
 	_swing_time = 0.0
 	_swing_hit_done = false
-	_play_anim("Attack Block", true)
+	var anim_name: StringName = COMBO_ANIMS[_swing_index % COMBO_ANIMS.size()]
+	_swing_index += 1
+	if _anim_player and _anim_player.has_animation(anim_name):
+		_attack_anim_length = _anim_player.get_animation(anim_name).length
+	_play_anim(anim_name, true)
 
 
 func _apply_strike() -> void:
@@ -340,7 +405,7 @@ func _enter_attack() -> void:
 	state = State.ATTACK
 	_attack_cd = 0.0
 	_swing_time = -1.0
-	_play_anim("Attack Block")
+	_play_anim("Attack")
 
 
 func _enter_hurt() -> void:
@@ -378,7 +443,7 @@ func _face(dir: Vector3, delta: float) -> void:
 	dir.y = 0.0
 	if dir.length_squared() < 0.0001:
 		return
-	var target_yaw := atan2(-dir.x, -dir.z)
+	var target_yaw := atan2(dir.x, dir.z) - _model_yaw_offset
 	rotation.y = lerp_angle(rotation.y, target_yaw, clampf(turn_speed * delta, 0.0, 1.0))
 
 

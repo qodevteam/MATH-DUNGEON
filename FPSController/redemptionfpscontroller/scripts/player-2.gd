@@ -25,6 +25,7 @@ signal health_changed(current: float, maximum: float)
 
 var current_health: float = 100.0
 var is_dead: bool = false
+var _health_bars: Array[HSlider] = []
 
 @export_category("Sprint")
 ## Allow sprinting when enabled.
@@ -121,6 +122,7 @@ var _pending_auto_reload: bool = false
 
 func _ready() -> void:
 	current_health = max_health
+	_setup_health_bars()
 	health_changed.emit(current_health, max_health)
 
 	gimbal_h = get_node_or_null("CameraGimbal")                     as Node3D
@@ -140,6 +142,11 @@ func _ready() -> void:
 
 	if not camera_effects:
 		camera_effects = get_node_or_null("CameraGimbal/InnerGimbal/Camera3D/CameraEffects") as CameraEffects
+	if camera_effects:
+		if camera_effects.damage_kick_strength > 1.0:
+			camera_effects.damage_kick_strength = deg_to_rad(8.0)
+		if camera_effects.damage_kick_decay < 2.0:
+			camera_effects.damage_kick_decay = 6.0
 	if not weapon_viewmodel:
 		weapon_viewmodel = get_node_or_null("CameraGimbal/InnerGimbal/Camera3D/player-shotgun-main/WeaponViewmodel") as WeaponViewmodelController
 
@@ -713,6 +720,24 @@ func heal(amount: float) -> void:
 		return
 	current_health = minf(current_health + amount, max_health)
 	health_changed.emit(current_health, max_health)
+
+
+func _setup_health_bars() -> void:
+	_health_bars.clear()
+	for path in ["CanvasLayer/HEALTHBAR2", "CanvasLayer/HEALTHBAR2/HEALTHBAR"]:
+		var bar := get_node_or_null(path) as HSlider
+		if bar:
+			_health_bars.append(bar)
+			bar.max_value = max_health
+			bar.value = current_health
+	if not health_changed.is_connected(_on_health_changed):
+		health_changed.connect(_on_health_changed)
+
+
+func _on_health_changed(current: float, maximum: float) -> void:
+	for bar in _health_bars:
+		bar.max_value = maximum
+		bar.value = current
 
 
 func die() -> void:

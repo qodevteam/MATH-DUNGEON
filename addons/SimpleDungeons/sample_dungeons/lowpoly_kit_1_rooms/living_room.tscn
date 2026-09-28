@@ -4,7 +4,6 @@
 [ext_resource type="Script" uid="uid://c5kfharnpaw77" path="res://math_door.gd" id="2_2bddj"]
 [ext_resource type="PackedScene" uid="uid://cw8uatv4yd688" path="res://coins.tscn" id="2_o03sl"]
 [ext_resource type="Script" uid="uid://c3e24hvhd16ub" path="res://FPSController/InteractableComponent.gd" id="3_o03sl"]
-[ext_resource type="PackedScene" uid="uid://dd3gpx7dgnhsa" path="res://player.tscn" id="5_704si"]
 [ext_resource type="PackedScene" uid="uid://bo06is13ck0mn" path="res://enemy.tscn" id="6_03md2"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_upkxj"]
@@ -1818,12 +1817,6 @@ mesh = SubResource("ArrayMesh_7n2s3")
 transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0, -4.999999)
 navigation_mesh = SubResource("NavigationMesh_pgbbb")
 
-[node name="Player" parent="." unique_id=1461905877 instance=ExtResource("5_704si")]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 10.115156, 0, 4.104734)
-
-[node name="SpotLight3D2" parent="Player/CameraGimbal/InnerGimbal/Camera/player-shotgun-main/player-shotgun/shotgun/Object_2/RootNode/Armature/Object_5/Skeleton3D/BoneAttachment3D2/BoneAttachment3D2/picatinny_mount_mount_0/flashlightbody" parent_id_path=PackedInt32Array(1461905877, 736920058) index="1" unique_id=1726619725]
-shadow_bias = 0.05
-
 [node name="enemy" parent="." unique_id=441373270 instance=ExtResource("6_03md2")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -4.4788246, 4.8112926)
 
@@ -1832,5 +1825,3 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 2.5148659, -4.4788246, 4.8112
 
 [node name="enemy3" parent="." unique_id=1850078803 instance=ExtResource("6_03md2")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 4.9808407, -4.4788246, 4.8112926)
-
-[editable path="Player"]
