@@ -39,6 +39,7 @@ func _setup_particles() -> void:
 	_particles.explosiveness = 0.9
 	_particles.emitting = false
 	_particles.local_coords = true
+	_particles.position = Vector3.ZERO
 
 	var material = ParticleProcessMaterial.new()
 	material.direction = Vector3.UP
@@ -48,12 +49,7 @@ func _setup_particles() -> void:
 	material.gravity = Vector3(0, -6.0, 0)
 	material.scale_min = 0.08
 	material.scale_max = 0.2
-
-	var gradient = Gradient.new()
-	gradient.add_color_stop(0.0, Color(1.0, 0.9, 0.2, 1.0))
-	gradient.add_color_stop(0.5, Color(1.0, 0.6, 0.1, 0.8))
-	gradient.add_color_stop(1.0, Color(0.8, 0.3, 0.0, 0.0))
-	material.color = gradient
+	material.color = Color(1.0, 0.85, 0.2, 1.0)
 
 	_particles.process_material = material
 

@@ -11,6 +11,7 @@ content_margin_bottom = 50.0
 bg_color = Color(0.02, 0.02, 0.02, 1)
 
 [node name="MathUIEquationDisplayer" type="Control" unique_id=987654321]
+z_index = 100
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,8 +21,10 @@ grow_vertical = 2
 script = ExtResource("1_s")
 timer_duration = 30.0
 
-[node name="Overlay" type="ColorRect" parent="." unique_id=100000001]
-layout_mode = 1
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=100000014]
+layer = 2
+
+[node name="Overlay" type="ColorRect" parent="CanvasLayer" unique_id=100000001]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -30,36 +33,35 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0.13333334)
 
-[node name="Panel" type="PanelContainer" parent="." unique_id=100000002]
+[node name="Panel" type="PanelContainer" parent="CanvasLayer" unique_id=100000002]
 custom_minimum_size = Vector2(700, 520)
-layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -350.0
-offset_top = -260.0
+offset_top = -266.0
 offset_right = 350.0
-offset_bottom = 260.0
+offset_bottom = 266.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_j5jxj")
 
-[node name="VBox" type="VBoxContainer" parent="Panel" unique_id=100000003]
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/Panel" unique_id=100000003]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 28
 
-[node name="TitleLabel" type="Label" parent="Panel/VBox" unique_id=100000004]
+[node name="TitleLabel" type="Label" parent="CanvasLayer/Panel/VBox" unique_id=100000004]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "LOCKED DOOR"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="SubtitleLabel" type="Label" parent="Panel/VBox" unique_id=100000005]
+[node name="SubtitleLabel" type="Label" parent="CanvasLayer/Panel/VBox" unique_id=100000005]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -70,7 +72,7 @@ text = "ANSWER THE QUESTION to unlock"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="QuestionLabel" type="Label" parent="Panel/VBox" unique_id=100000006]
+[node name="QuestionLabel" type="Label" parent="CanvasLayer/Panel/VBox" unique_id=100000006]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -80,48 +82,46 @@ theme_override_font_sizes/font_size = 18
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="OptionGrid" type="GridContainer" parent="Panel/VBox" unique_id=100000007]
+[node name="OptionGrid" type="GridContainer" parent="CanvasLayer/Panel/VBox" unique_id=100000007]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/h_separation = 24
 theme_override_constants/v_separation = 20
 columns = 2
 
-[node name="OptionButton1" type="Button" parent="Panel/VBox/OptionGrid" unique_id=100000008]
+[node name="OptionButton1" type="Button" parent="CanvasLayer/Panel/VBox/OptionGrid" unique_id=100000008]
 custom_minimum_size = Vector2(280, 70)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "A"
 
-[node name="OptionButton2" type="Button" parent="Panel/VBox/OptionGrid" unique_id=100000009]
+[node name="OptionButton2" type="Button" parent="CanvasLayer/Panel/VBox/OptionGrid" unique_id=100000009]
 custom_minimum_size = Vector2(280, 70)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "B"
 
-[node name="OptionButton3" type="Button" parent="Panel/VBox/OptionGrid" unique_id=100000010]
+[node name="OptionButton3" type="Button" parent="CanvasLayer/Panel/VBox/OptionGrid" unique_id=100000010]
 custom_minimum_size = Vector2(280, 70)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "C"
 
-[node name="OptionButton4" type="Button" parent="Panel/VBox/OptionGrid" unique_id=100000011]
+[node name="OptionButton4" type="Button" parent="CanvasLayer/Panel/VBox/OptionGrid" unique_id=100000011]
 custom_minimum_size = Vector2(280, 70)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "D"
 
-[node name="TimerBar" type="ProgressBar" parent="Panel/VBox" unique_id=100000012]
+[node name="TimerBar" type="ProgressBar" parent="CanvasLayer/Panel/VBox" unique_id=100000012]
 custom_minimum_size = Vector2(600, 24)
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 15.0
 value = 15.0
 
-[node name="SkipButton" type="Button" parent="Panel/VBox" unique_id=100000013]
+[node name="SkipButton" type="Button" parent="CanvasLayer/Panel/VBox" unique_id=100000013]
 custom_minimum_size = Vector2(160, 44)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Skip"
-
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=100000014]
