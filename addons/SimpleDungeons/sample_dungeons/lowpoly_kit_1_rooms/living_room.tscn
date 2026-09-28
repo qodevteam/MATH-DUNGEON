@@ -4,6 +4,8 @@
 [ext_resource type="Script" uid="uid://c5kfharnpaw77" path="res://math_door.gd" id="2_2bddj"]
 [ext_resource type="PackedScene" uid="uid://cw8uatv4yd688" path="res://coins.tscn" id="2_o03sl"]
 [ext_resource type="Script" uid="uid://c3e24hvhd16ub" path="res://FPSController/InteractableComponent.gd" id="3_o03sl"]
+[ext_resource type="PackedScene" uid="uid://dd3gpx7dgnhsa" path="res://player.tscn" id="5_704si"]
+[ext_resource type="PackedScene" uid="uid://bo06is13ck0mn" path="res://enemy.tscn" id="6_03md2"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_upkxj"]
 resource_name = "dark grey"
@@ -1065,12 +1067,12 @@ light_color = Color(1, 0, 0.3833332, 1)
 light_energy = 1.678
 omni_range = 11.439165
 
-[node name="DoorInteractable" type="MeshInstance3D" parent="Models/B_DOOR" unique_id=1783090988 node_paths=PackedStringArray("animation_player", "interactable", "collision_shape", "door_mesh")]
+[node name="DoorInteractable" type="MeshInstance3D" parent="Models/B_DOOR" unique_id=1783090988 node_paths=PackedStringArray("interactable", "animation_player", "collision_shape", "door_mesh")]
 transform = Transform3D(0.9999997, 0, 0, 0, 0.9999997, 0, 0, 0, 0.9999997, 2.1413722, 1.1869988, 0.06900692)
 mesh = SubResource("ArrayMesh_704si")
 script = ExtResource("2_2bddj")
-animation_player = NodePath("door interact")
 interactable = NodePath("InteractableComponent")
+animation_player = NodePath("door interact")
 collision_shape = NodePath("Area3D/CollisionShape3D")
 door_mesh = NodePath(".")
 
@@ -1104,12 +1106,12 @@ light_color = Color(1, 0, 0.3833332, 1)
 light_energy = 1.678
 omni_range = 11.439165
 
-[node name="DoorInteractable" type="MeshInstance3D" parent="Models/RB_DOOR" unique_id=1099428110 node_paths=PackedStringArray("animation_player", "interactable", "collision_shape", "door_mesh")]
+[node name="DoorInteractable" type="MeshInstance3D" parent="Models/RB_DOOR" unique_id=1099428110 node_paths=PackedStringArray("interactable", "animation_player", "collision_shape", "door_mesh")]
 transform = Transform3D(0.9999997, 0, 0, 0, 0.9999997, 0, 0, 0, 0.9999997, 2.1413722, 1.1869988, 0.06900692)
 mesh = SubResource("ArrayMesh_704si")
 script = ExtResource("2_2bddj")
-animation_player = NodePath("door interact")
 interactable = NodePath("InteractableComponent")
+animation_player = NodePath("door interact")
 collision_shape = NodePath("Area3D/CollisionShape3D")
 door_mesh = NodePath(".")
 
@@ -1143,12 +1145,12 @@ light_color = Color(1, 0, 0.3833332, 1)
 light_energy = 1.678
 omni_range = 11.439165
 
-[node name="DoorInteractable" type="MeshInstance3D" parent="Models/RF_DOOR" unique_id=1136526333 node_paths=PackedStringArray("animation_player", "interactable", "collision_shape", "door_mesh")]
+[node name="DoorInteractable" type="MeshInstance3D" parent="Models/RF_DOOR" unique_id=1136526333 node_paths=PackedStringArray("interactable", "animation_player", "collision_shape", "door_mesh")]
 transform = Transform3D(0.9999997, 0, 0, 0, 0.9999997, 0, 0, 0, 0.9999997, 2.1413722, 1.1869988, 0.06900692)
 mesh = SubResource("ArrayMesh_704si")
 script = ExtResource("2_2bddj")
-animation_player = NodePath("door interact")
 interactable = NodePath("InteractableComponent")
+animation_player = NodePath("door interact")
 collision_shape = NodePath("Area3D/CollisionShape3D")
 door_mesh = NodePath(".")
 
@@ -1182,12 +1184,12 @@ light_color = Color(1, 0, 0.3833332, 1)
 light_energy = 1.678
 omni_range = 11.439165
 
-[node name="DoorInteractable" type="MeshInstance3D" parent="Models/LB_DOOR" unique_id=1111268093 node_paths=PackedStringArray("animation_player", "interactable", "collision_shape", "door_mesh")]
+[node name="DoorInteractable" type="MeshInstance3D" parent="Models/LB_DOOR" unique_id=1111268093 node_paths=PackedStringArray("interactable", "animation_player", "collision_shape", "door_mesh")]
 transform = Transform3D(0.9999997, 0, 0, 0, 0.9999997, 0, 0, 0, 0.9999997, 2.1413722, 1.1869988, 0.06900692)
 mesh = SubResource("ArrayMesh_704si")
 script = ExtResource("2_2bddj")
-animation_player = NodePath("door interact")
 interactable = NodePath("InteractableComponent")
+animation_player = NodePath("door interact")
 collision_shape = NodePath("Area3D/CollisionShape3D")
 door_mesh = NodePath(".")
 
@@ -1221,12 +1223,12 @@ light_color = Color(1, 0, 0.3833332, 1)
 light_energy = 1.678
 omni_range = 11.439165
 
-[node name="DoorInteractable" type="MeshInstance3D" parent="Models/LF_DOOR" unique_id=88760871 node_paths=PackedStringArray("animation_player", "interactable", "collision_shape", "door_mesh")]
+[node name="DoorInteractable" type="MeshInstance3D" parent="Models/LF_DOOR" unique_id=88760871 node_paths=PackedStringArray("interactable", "animation_player", "collision_shape", "door_mesh")]
 transform = Transform3D(0.9999997, 0, 0, 0, 0.9999997, 0, 0, 0, 0.9999997, 2.1413722, 1.1869988, 0.06900692)
 mesh = SubResource("ArrayMesh_704si")
 script = ExtResource("2_2bddj")
-animation_player = NodePath("door interact")
 interactable = NodePath("InteractableComponent")
+animation_player = NodePath("door interact")
 collision_shape = NodePath("Area3D/CollisionShape3D")
 door_mesh = NodePath(".")
 
@@ -1807,3 +1809,14 @@ shape = SubResource("BoxShape3D_1qoo3")
 
 [node name="barrel" type="MeshInstance3D" parent="Models/Decorations/RigidBody3D" unique_id=1657777032]
 mesh = SubResource("ArrayMesh_7n2s3")
+
+[node name="Player" parent="." unique_id=1461905877 instance=ExtResource("5_704si")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 10.115156, 0, 4.104734)
+
+[node name="SpotLight3D2" parent="Player/CameraGimbal/InnerGimbal/Camera/player-shotgun-main/player-shotgun/shotgun/Object_2/RootNode/Armature/Object_5/Skeleton3D/BoneAttachment3D2/BoneAttachment3D2/picatinny_mount_mount_0/flashlightbody" parent_id_path=PackedInt32Array(1461905877, 736920058) index="1" unique_id=1726619725]
+shadow_bias = 0.05
+
+[node name="enemy" parent="." unique_id=441373270 instance=ExtResource("6_03md2")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, -1.8288743, 4.8112926)
+
+[editable path="Player"]
