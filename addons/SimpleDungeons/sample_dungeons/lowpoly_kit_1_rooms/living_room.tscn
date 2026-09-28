@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cp482jksdvsth" path="res://addons/SimpleDungeons/sample_dungeons/lowpoly_kit_1_rooms/living_room.gd" id="1_y5hb7"]
 [ext_resource type="Script" uid="uid://c5kfharnpaw77" path="res://math_door.gd" id="2_2bddj"]
+[ext_resource type="PackedScene" uid="uid://cw8uatv4yd688" path="res://coins.tscn" id="2_o03sl"]
 [ext_resource type="Script" uid="uid://c3e24hvhd16ub" path="res://FPSController/InteractableComponent.gd" id="3_o03sl"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_upkxj"]
@@ -490,7 +491,7 @@ metallic = 0.36
 metallic_specular = 1.0
 roughness = 0.24
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_aqda0"]
+[sub_resource type="ArrayMesh" id="ArrayMesh_03md2"]
 _surfaces = [{
 "aabb": AABB(-0.128112, -0.14793, -0.0260946, 0.256223, 0.295861, 0.0521893),
 "format": 34896613377,
@@ -522,7 +523,7 @@ _surfaces = [{
 "vertex_data": PackedByteArray("/39+0QAA/7//f37RAAD///9/ftEAAP+//39+0f7//7//f37R/v/+f/9/ftH+//+/ftG/qAAA/79+0b+oAAD/v37Rv6gAAP//ftG/qP7//79+0b+o/v//v37Rv6j+//5/ftE/VwAA/79+0T9XAAD/v37RP1cAAP//ftE/V/7//79+0T9X/v//v37RP1f+//5//3+ALgAA/7//f4AuAAAAAP9/gC4AAP+//3+ALv7//7//f4Au/v/+f/9/gC7+//+/gC4/VwAAAACALj9XAAD/v4AuP1cAAP+/gC4/V/7//n+ALj9X/v//v4AuP1f+//+/gC6/qAAA//+ALr+oAAD/v4Auv6gAAP+/gC6/qP7//n+ALr+o/v//v4Auv6j+//+//3///wAA/7//f///AAD///9///8AAP+/////vwAA//////+/AAD/v////78AAP+/////v/7//n////+//v//v////7/+//+//3///////7//f//////+f/9///////+/////PwAA//////8/AAD/v////z8AAP+/////P/7//n////8//v//v////z/+//+//38AAAAA/7//fwAAAAAAAP9/AAAAAP+//38AAP7//7//fwAA/v/+f/9/AAD+//+/AAD/PwAA/78AAP8/AAD/vwAA/z8AAP//AAD/P/7//78AAP8//v//vwAA/z/+//5/AAD/vwAA/78AAP+/AAD/vwAA/78AAP//AAD/v/7//78AAP+//v//vwAA/7/+//5//39+0Yo4/7//f37Rijj///9/ftGKOP+/ftG/qIo4/79+0b+oijj/v37Rv6iKOP//ftG/qHTH/79+0b+odMf/v37Rv6h0x/5//39+0XTH/7//f37RdMf+f/9/ftF0x/+/ftE/V4o4/79+0T9Xijj/v37RP1eKOP//ftE/V3TH/79+0T9XdMf/v37RP1d0x/5//3+ALoo4/7//f4Auijj///9/gC6KOP+//3+ALnTH/7//f4AudMf+f/9/gC50x/+/gC4/V4o4//+ALj9Xijj/v4AuP1eKOP+/gC4/V3TH/n+ALj9XdMf/v4AuP1d0x/+/gC6/qIo4//+ALr+oijj/v4Auv6iKOP+/gC6/qHTH/n+ALr+odMf/v4Auv6h0x/+//39+0QAA/7//f37R/v//v37Rv6j+//9/gC4/V/7//7+ALr+oAAD///9///8AAP//////v/7//3//f/////9foP9/AAAAAP///38AAP7//38AAP8//v//vwAA/78AAP+/ftE/V4o4/7+ALj9XdMf/vwwbDJv///9/DBvyZAwbDJv/f///DBvyZP9///8MGwyb////f/9///8MGwyb/3////9////y5Ayb////f/9////y5Ayb/3////LkDJtaqaTW8uTyZPLkDJv/f///8uTyZFqppNby5PJk/38AAP9////y5PJk/38AAP///38MG/Jk/38AAP9///8MG/Jk/38AAPLkDJv///9/8uTyZP///3/y5PJk/38AAP9////y5PJk/38AAPLkDJv/f///8uTyZP///38MG/Jk/38AAP9///8MG/Jk/38AAAwbDJtaqaTWDBvyZAwbDJv/f///DBvyZP9///8MGwyb////f/9///8MGwyb/3////9////y5Ayb////f/9////y5Ayb/3///wwbDJv///9/DBvyZP9///8MGwyb////f/9///8MGwyb/3///wwbDJv/f///DBvyZP9////y5Ayb////f/9////y5Ayb/3////LkDJv/P/+/8uTyZPLkDJv/f///8uTyZP8//7/y5PJk/38AAP9////y5PJk/38AAP8//78MG/Jk/38AAP9///8MG/Jk/38AACEsIKzdJyJY/3///8I+PUH///9/////f/9///8k5Nmb////f/9///8MGwyb8uQMm082T7aSNGxL")
 }]
 blend_shape_mode = 0
-shadow_mesh = SubResource("ArrayMesh_aqda0")
+shadow_mesh = SubResource("ArrayMesh_03md2")
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_d3mwn"]
 _surfaces = [{
@@ -1048,6 +1049,9 @@ size = Vector3(3.83984, 5.25, 1)
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -15, -2.16705, 5)
 operation = 2
 size = Vector3(3.85156, 5.16589, 1)
+
+[node name="Coin" parent="." unique_id=438393974 instance=ExtResource("2_o03sl")]
+transform = Transform3D(2.4182897, 0, 0, 0, 2.4182897, 0, 0, 0, 2.4182897, 12.319654, -3.2086382, 7.9109)
 
 [node name="Models" type="Node3D" parent="." unique_id=2106187195]
 
@@ -1790,6 +1794,9 @@ mesh = SubResource("ArrayMesh_h48rp")
 [node name="skull" type="MeshInstance3D" parent="Models/Decorations/Table" unique_id=89644115]
 transform = Transform3D(-1.39387, 0.46982, 0, -1.68021e-07, -4.98487e-07, 1.47092, 0.46982, 1.39387, 5.26042e-07, -0.892098, -2.8521, 4.06275)
 mesh = SubResource("ArrayMesh_ycq3d")
+
+[node name="Coin" parent="Models/Decorations" unique_id=361404419 instance=ExtResource("2_o03sl")]
+transform = Transform3D(2.4182897, 0, 0, 0, 2.4182897, 0, 0, 0, 2.4182897, -13.2044, -2.5443823, 13.5921)
 
 [node name="RigidBody3D" type="RigidBody3D" parent="Models/Decorations" unique_id=2123101427]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.2044, -3.87135, 13.5921)
