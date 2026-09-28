@@ -9,25 +9,61 @@ extends DungeonRoom3D
 signal trap_unlocked(room_name: String)
 
 var pressed_lever_down = false
+var _setup_done = false
 
-func _ready() -> void:
-	super._ready()
+@export var lever_1_node: NodePath = \"Models/Node3D2/Lever\"
+@export var lever_2_node: NodePath = \"Models/Node3D2/Lever2\"
+
+func _process(_delta):
+	if _setup_done or not is_inside_tree():
+		return
+	_setup_done = true
 	if not pressed_lever_down:
 		call_deferred(\"_connect_interact\")
 
 func _connect_interact() -> void:
-	var ic: InteractableComponent = get_node_or_null(\"Models/Node3D2/Lever/Area3D/InteractableComponent\")
-	if ic:
-		ic.interacted.connect(_on_interact)
+	var lever1 = get_node_or_null(lever_1_node)
+	if lever1:
+		var ic1 = lever1.get_node_or_null(\"Area3D/InteractableComponent\")
+		if ic1:
+			call_deferred(\"_safe_connect\", ic1.get_path())
+
+	var lever2 = get_node_or_null(lever_2_node)
+	if lever2:
+		var ic2 = lever2.get_node_or_null(\"Area3D/InteractableComponent\")
+		if ic2:
+			call_deferred(\"_safe_connect\", ic2.get_path())
+
+func _safe_connect(ic_path: String):
+	var ic = get_node_or_null(ic_path)
+	if ic and is_instance_valid(ic):
+		ic.connect(\"interacted\", _on_interact)
 
 func _on_interact() -> void:
 	if pressed_lever_down:
 		return
 	pressed_lever_down = true
-	$Models/Node3D2/Lever/lever.rotation.x *= -1
-	var ap: AnimationPlayer = get_node_or_null(\"Models/Node3D2/Lever/Area3D/interactunlock\")
-	if ap:
-		ap.play(\"trap_door_fake_unlocked\")
+
+	var lever1 = get_node_or_null(lever_1_node)
+	if lever1:
+		var mesh1 = lever1.get_node(\"lever\")
+		if mesh1:
+			mesh1.rotation.x *= -1
+
+	var lever2 = get_node_or_null(lever_2_node)
+	if lever2:
+		var mesh2 = lever2.get_node(\"lever\")
+		if mesh2:
+			mesh2.rotation.x *= -1
+
+	var ap1 = get_node_or_null(\"Models/Node3D2/Lever/Area3D/interactunlock\")
+	if ap1:
+		ap1.play(\"trap_door_fake_unlocked\")
+
+	var ap2 = get_node_or_null(\"Models/Node3D2/Lever2/Area3D/interactunlock\")
+	if ap2:
+		ap2.play(\"trap_door_fake_unlocked\")
+
 	trap_unlocked.emit(name)
 "
 

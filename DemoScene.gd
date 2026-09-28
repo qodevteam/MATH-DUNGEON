@@ -123,7 +123,6 @@ func regenerate():
 	var room_scenes : Array[PackedScene] = []
 	room_scenes.assign(d_arr)
 	%DungeonGenerator3D.corridor_room_scene = corridor
-	%DungeonGenerator3D.trap_room_fake_scene = preload("res://addons/SimpleDungeons/sample_dungeons/lowpoly_kit_1_rooms/trap_room_fake.tscn")
 	%DungeonGenerator3D.room_scenes = room_scenes
 	
 	%DungeonGenerator3D.custom_get_rooms_function = custom_get_rand_rooms if n == "Custom room placement demo" else null

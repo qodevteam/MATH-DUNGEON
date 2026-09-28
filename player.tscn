@@ -52,7 +52,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [5.876953]
+"values": [7.688000000000001]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -64,7 +64,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, -4.6555543, 0)]
+"values": [Vector3(0, -2.201, 0)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -76,7 +76,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [0.7607422]
+"values": [0.901]
 }
 
 [sub_resource type="Animation" id="Animation_qtsuy"]
@@ -92,7 +92,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.4),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [5.876953, 3.284]
+"values": [7.688000000000001, 4.371]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -104,7 +104,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.39536554),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector3(0, -4.6555543, 0), Vector3(0, -5.864, 0)]
+"values": [Vector3(0, -3.101, 0), Vector3(0, -3.864, 0)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -132,7 +132,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.39767432),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [3.284, 5.876953]
+"values": [3.284, 7.688000000000001]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -144,7 +144,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0, 0.4004),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector3(0, -5.864, 0), Vector3(0, -3.908, 0)]
+"values": [Vector3(0, -5.864, 0), Vector3(0, -2.935, 0)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -167,8 +167,8 @@ _data = {
 }
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kde0i"]
-radius = 0.7607422
-height = 5.876953
+radius = 0.901
+height = 7.688
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_t4u0d"]
 
@@ -650,12 +650,10 @@ blend_shape_mode = 0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fk1ak"]
 transparency = 1
+shading_mode = 0
 vertex_color_use_as_albedo = true
 vertex_color_is_srgb = true
-albedo_color = Color(1, 1, 1, 0.05882353)
 albedo_texture = ExtResource("19_tw8ou")
-emission_enabled = true
-emission_energy_multiplier = 3.64
 billboard_mode = 3
 billboard_keep_scale = true
 particles_anim_h_frames = 8
@@ -694,7 +692,7 @@ gravity = Vector3(0, 0, 0)
 linear_accel_min = -2.2351742e-06
 linear_accel_max = 0.99999774
 scale_min = 0.19999999
-scale_max = 0.29999998
+scale_max = 0.59999996
 scale_curve = SubResource("CurveTexture_irmb4")
 color = Color(1.6593475, 1.6430978, 1.6430978, 0.11372549)
 color_ramp = SubResource("GradientTexture1D_1pk0w")
@@ -2308,6 +2306,7 @@ _data = {
 frequency = 0.0152
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_7ebel"]
+margin = 0.0
 radius = 0.25
 
 [sub_resource type="Curve" id="Curve_b00hk"]
@@ -2583,7 +2582,7 @@ safe_margin = 0.05
 script = ExtResource("1_pgbbb")
 speed = 14.0
 acceleration = 400.0
-jump_height = 3.1
+jump_height = 5.3999999999999995
 camera_sens = 2.1
 lookAllowed = true
 moveAllowed = true
@@ -2600,18 +2599,18 @@ weapon_viewmodel = NodePath("CameraGimbal/InnerGimbal/Camera/player-shotgun-main
 drift_duration = 1.2
 drift_deceleration = 1.0
 drift_steer_strength = 80.0
-step_max_height = 5.0
+step_max_height = 4.0
 
 [node name="animator_player" type="AnimationPlayer" parent="." unique_id=379685635]
 libraries/ = SubResource("AnimationLibrary_kslcm")
 
 [node name="PLAYER-BODY" type="CollisionShape3D" parent="." unique_id=325547978]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -6.694146, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5.389093, 0)
 shape = SubResource("CapsuleShape3D_kde0i")
 debug_color = Color(0, 0.85000014, 1, 1)
 
 [node name="CameraGimbal" type="Node3D" parent="." unique_id=1863431284]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.6555543, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2.201, 0)
 
 [node name="gunshot" type="AudioStreamPlayer3D" parent="CameraGimbal" unique_id=1011460980]
 transform = Transform3D(-0.0040901927, 0, 0.99999166, 0, 1, 0, -0.99999166, 0, -0.0040901927, 0.023895264, 0.08943701, -1.0347532)
@@ -3395,11 +3394,10 @@ light_volumetric_fog_energy = 3.644
 light_projector = SubResource("CompressedTexture2D_32lns")
 light_specular = 0.0
 shadow_enabled = true
-shadow_bias = 1.0
 shadow_blur = 3.246
 spot_range = 93.495
 spot_attenuation = 0.49
-spot_angle = 35.89
+spot_angle = 47.14
 
 [node name="shotgun" type="MeshInstance3D" parent="CameraGimbal/InnerGimbal/Camera/player-shotgun-main/player-shotgun/shotgun/Object_2/RootNode/Armature/Object_5/Skeleton3D" unique_id=2064190032]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.003326416, 0.0009994507, 0)
@@ -3416,7 +3414,6 @@ lifetime = 2.0
 one_shot = true
 preprocess = 0.3
 fixed_fps = 60
-trail_enabled = true
 trail_lifetime = 2.1399999999999997
 process_material = SubResource("ParticleProcessMaterial_ejkoe")
 draw_pass_1 = SubResource("QuadMesh_02tpk")
@@ -3475,7 +3472,7 @@ transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0
 
 [node name="InteractShapeCast3D" type="ShapeCast3D" parent="CameraGimbal/InnerGimbal/Camera" unique_id=1065701295]
 shape = SubResource("SphereShape3D_7ebel")
-target_position = Vector3(0, 0, -2.235)
+target_position = Vector3(0, 0, -5)
 max_results = 2
 collide_with_areas = true
 
