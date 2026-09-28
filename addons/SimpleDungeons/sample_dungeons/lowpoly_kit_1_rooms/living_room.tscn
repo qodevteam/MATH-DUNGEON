@@ -1827,4 +1827,10 @@ shadow_bias = 0.05
 [node name="enemy" parent="." unique_id=441373270 instance=ExtResource("6_03md2")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, -4.4788246, 4.8112926)
 
+[node name="enemy2" parent="." unique_id=1034993464 instance=ExtResource("6_03md2")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 2.5148659, -4.4788246, 4.8112926)
+
+[node name="enemy3" parent="." unique_id=1850078803 instance=ExtResource("6_03md2")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 4.9808407, -4.4788246, 4.8112926)
+
 [editable path="Player"]

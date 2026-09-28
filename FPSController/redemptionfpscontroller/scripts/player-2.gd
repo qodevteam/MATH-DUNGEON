@@ -742,9 +742,12 @@ func _hitscan_shot() -> void:
 	var collider = hit.get("collider")
 	if collider == null:
 		return
+	var hit_pos := from
+	if hit.has("position"):
+		hit_pos = hit["position"]
 	var target: Node = collider as Node
 	if target and target.is_in_group("enemies") and target.has_method("take_damage"):
-		target.take_damage(shotgun_damage, from)
+		target.take_damage(shotgun_damage, hit_pos)
 
 
 func reload_ammo():

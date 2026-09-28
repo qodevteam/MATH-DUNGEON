@@ -303,6 +303,7 @@ func take_damage(amount: float, hit_pos: Vector3 = Vector3.ZERO) -> void:
 	current_health -= amount
 	_flash_timer = hit_flash_time
 	_set_flash(true)
+	_spawn_damage_label(amount, hit_pos)
 	if hit_pos != Vector3.ZERO:
 		var away := global_position - hit_pos
 		away.y = 0.0
@@ -351,7 +352,7 @@ func _enter_hurt() -> void:
 
 func _enter_death() -> void:
 	state = State.DEAD
-	current_health = minf(current_health, 0.0)
+	current_health = 0.0
 	_swing_time = -1.0
 	_set_flash(false)
 	collision_layer = 0
@@ -400,3 +401,28 @@ func _tick_feedback(delta: float) -> void:
 func _set_flash(on: bool) -> void:
 	for mesh in _meshes:
 		mesh.material_overlay = _flash_mat if on else null
+
+
+func _spawn_damage_label(amount: float, hit_pos: Vector3) -> void:
+	var spawn := hit_pos
+	if spawn == Vector3.ZERO:
+		spawn = global_position + Vector3.UP * 2.0
+	var label := Label3D.new()
+	label.text = str(int(round(amount)))
+	label.font_size = 128
+	label.pixel_size = 0.004
+	label.outline_size = 32
+	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	label.no_depth_test = true
+	label.outline_modulate = Color(0.1, 0.0, 0.0, 1.0)
+	label.modulate = Color(1.0, 0.9, 0.2, 1.0) if current_health > 0.0 else Color(1.0, 0.25, 0.2, 1.0)
+	var parent := get_tree().current_scene
+	if parent == null:
+		parent = get_parent()
+	parent.add_child(label)
+	label.global_position = spawn
+	var tw := label.create_tween()
+	tw.set_parallel(true)
+	tw.tween_property(label, "position", label.position + Vector3.UP * 1.1, 0.75).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tw.tween_property(label, "modulate:a", 0.0, 0.35).set_delay(0.4)
+	tw.chain().tween_callback(label.queue_free)
